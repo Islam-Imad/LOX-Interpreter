@@ -163,6 +163,30 @@ std::string TokenTypesToString(int tokenType)
 }
 
 const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = {
+    {")", RIGHT_PAREN},
+    {"{", LEFT_BRACE},
+    {"}", RIGHT_BRACE},
+    {",", COMMA},
+    {".", DOT},
+    {"-", MINUS},
+    {"+", PLUS},
+    {";", SEMICOLON},
+    {"/", SLASH},
+    {"*", STAR},
+    {"?", QUESTION},
+    {"!", BANG},
+    {"=", EQUAL},
+    {">", GREATER},
+    {"<", LESS},
+    {"!=", BANG_EQUAL},
+    {"==", EQUAL_EQUAL},
+    {">=", GREATER_EQUAL},
+    {"<=", LESS_EQUAL},
+    {"identifier", IDENTIFIER},
+    {"string", STRING},
+    {"number", NUMBER},
+    {"true", BOOLEAN},
+    {"false", BOOLEAN},
     {"and", AND},
     {"class", CLASS},
     {"else", ELSE},
@@ -224,16 +248,6 @@ const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {SHARP, "#"},
     {SLASH_SLASH, "//"}};
 
-bool TokenUtilites::is_keyword(TokenType token_type)
-{
-    return string_tokens.find(token_type_to_string(token_type)) != string_tokens.end();
-}
-
-bool TokenUtilites::is_keyword(const std::string &token)
-{
-    return string_tokens.find(token) != string_tokens.end();
-}
-
 TokenType TokenUtilites::string_to_token_type(const std::string &token)
 {
     auto it = string_tokens.find(token);
@@ -252,4 +266,65 @@ std::string TokenUtilites::token_type_to_string(TokenType token_type)
         return it->second;
     }
     throw std::runtime_error("Unknown token type");
+}
+
+bool TokenUtilites::is_keyword(const std::string &token)
+{
+    return string_tokens.find(token) != string_tokens.end();
+}
+
+bool TokenUtilites::is_equality(TokenType token_type)
+{
+    return token_type == EQUAL_EQUAL || token_type == BANG_EQUAL;
+}
+
+bool TokenUtilites::is_comparison(TokenType token_type)
+{
+    return token_type == GREATER || token_type == GREATER_EQUAL || token_type == LESS || token_type == LESS_EQUAL;
+}
+
+bool TokenUtilites::is_term(TokenType token_type)
+{
+    return token_type == PLUS || token_type == MINUS;
+}
+
+bool TokenUtilites::is_factor(TokenType token_type)
+{
+    return token_type == STAR || token_type == SLASH;
+}
+
+bool TokenUtilites::is_unary(TokenType token_type)
+{
+    return token_type == BANG || token_type == MINUS;
+}
+
+bool TokenUtilites::is_literal(TokenType token_type)
+{
+    return token_type == STRING || token_type == NUMBER || token_type == BOOLEAN;
+}
+
+bool TokenUtilites::is_primary(TokenType token_type)
+{
+    return is_literal(token_type) || token_type == LEFT_BRACE || token_type == IDENTIFIER;
+}
+
+bool TokenUtilites::is_keyword(TokenType token_type)
+{
+    return 
+    token_type == AND 
+    || token_type == CLASS 
+    || token_type == ELSE 
+    || token_type == FALSE 
+    || token_type == FUN 
+    || token_type == FOR 
+    || token_type == IF 
+    || token_type == NIL 
+    || token_type == OR 
+    || token_type == PRINT 
+    || token_type == RETURN 
+    || token_type == SUPER 
+    || token_type == THIS 
+    || token_type == TRUE 
+    || token_type == VAR 
+    || token_type == WHILE;
 }

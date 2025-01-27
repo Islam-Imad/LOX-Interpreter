@@ -133,6 +133,7 @@ public:
 
 class TokenUtilites
 {
+private:
     static const std::unordered_map<std::string, TokenType> string_tokens;
     static const std::unordered_map<int, std::string> token_strings;
 public:
@@ -140,6 +141,13 @@ public:
     static TokenType string_to_token_type(const std::string &token);
     static bool is_keyword(TokenType token_type);
     static bool is_keyword(const std::string &token);
+    static bool is_equality(TokenType token_type);
+    static bool is_comparison(TokenType token_type);
+    static bool is_term(TokenType token_type);
+    static bool is_factor(TokenType token_type);
+    static bool is_unary(TokenType token_type);
+    static bool is_literal(TokenType token_type);
+    static bool is_primary(TokenType token_type);
 };
 
 #endif // TOKEN_H

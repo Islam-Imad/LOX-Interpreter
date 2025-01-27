@@ -35,3 +35,60 @@ TEST(TokenUtilitesTest, Test2)
     ASSERT_EQ(tu.string_to_token_type("and"), TokenType::AND);
     ASSERT_EQ(tu.string_to_token_type("class"), TokenType::CLASS);
 }
+
+TEST(TokenUtilitesTest, Test3)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_equality(TokenType::EQUAL_EQUAL));
+    ASSERT_TRUE(tu.is_equality(TokenType::BANG_EQUAL));
+    ASSERT_FALSE(tu.is_equality(TokenType::GREATER));
+    ASSERT_FALSE(tu.is_equality(TokenType::LESS));
+    ASSERT_TRUE(tu.is_keyword(tu.string_to_token_type("var")));
+}
+
+TEST(TokenUtilitesTest, Test4)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_comparison(TokenType::GREATER));
+    ASSERT_TRUE(tu.is_comparison(TokenType::GREATER_EQUAL));
+    ASSERT_TRUE(tu.is_comparison(TokenType::LESS));
+    ASSERT_TRUE(tu.is_comparison(TokenType::LESS_EQUAL));
+    ASSERT_FALSE(tu.is_comparison(TokenType::EQUAL_EQUAL));
+    ASSERT_FALSE(tu.is_comparison(TokenType::BANG_EQUAL));
+}
+
+TEST(TokenUtilitesTest, Test5)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_term(TokenType::PLUS));
+    ASSERT_TRUE(tu.is_term(TokenType::MINUS));
+    ASSERT_FALSE(tu.is_term(TokenType::STAR));
+    ASSERT_FALSE(tu.is_term(TokenType::SLASH));
+}
+
+TEST(TokenUtilitesTest, Test6)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_factor(TokenType::STAR));
+    ASSERT_TRUE(tu.is_factor(TokenType::SLASH));
+    ASSERT_FALSE(tu.is_factor(TokenType::PLUS));
+    ASSERT_FALSE(tu.is_factor(TokenType::MINUS));
+}
+
+TEST(TokenUtilitesTest, Test7)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_unary(TokenType::BANG));
+    ASSERT_TRUE(tu.is_unary(TokenType::MINUS));
+    ASSERT_FALSE(tu.is_unary(TokenType::STAR));
+    ASSERT_FALSE(tu.is_unary(TokenType::SLASH));
+}
+
+TEST(TokenUtilitesTest, Test8)
+{
+    TokenUtilites tu;
+    ASSERT_TRUE(tu.is_literal(TokenType::STRING));
+    ASSERT_TRUE(tu.is_literal(TokenType::NUMBER));
+    ASSERT_TRUE(tu.is_literal(TokenType::BOOLEAN));
+    ASSERT_FALSE(tu.is_literal(TokenType::IDENTIFIER));
+}
