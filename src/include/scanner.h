@@ -9,6 +9,7 @@ class Scanner
 {
 private:
     const std::string kSource;
+    const TokenUtilites kTokenUtilites;
     std::vector<Token> tokens;
     int start;
     int current;
@@ -30,9 +31,10 @@ private:
     void number();
     void string();
     void identifier();
+    void single_line_comment();
 
 public:
-    Scanner(const std::string &source);
+    Scanner(const std::string &source, const TokenUtilites &tokenUtilites);
     std::vector<Token> scan();
 };
 

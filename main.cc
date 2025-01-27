@@ -7,6 +7,6 @@ int main(int argc, char *argv[])
 {
     std::cout << "Hello, World!" << std::endl;
     std::cout << "Version: " << PROJECT_VERSION << std::endl;
-    Scanner scanner("print \"Hello, World!\";");
+    Scanner scanner("print \"Hello, World!\";", TokenUtilites());
     return 0;
 }

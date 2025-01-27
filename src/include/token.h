@@ -2,6 +2,7 @@
 #define TOKEN_H
 
 #include <string>
+#include <unordered_map>    
 
 enum TokenType
 {
@@ -91,9 +92,12 @@ enum TokenType
     VAR // "var"
     ,
     WHILE // "while"
-
     ,
     eof // "EOF"
+    ,
+    SHARP // "#"
+    ,
+    SLASH_SLASH // "//"
 };
 
 // enum TokenCategory
@@ -111,8 +115,6 @@ enum TokenType
 //     LITERAL // string , number , boolean
 // };
 
-std::string TokenTypeToString(TokenType type);
-
 class Token
 {
 private:
@@ -127,6 +129,17 @@ public:
     int get_line() const;
     int get_start() const;
     int get_offset() const;
+};
+
+class TokenUtilites
+{
+    static const std::unordered_map<std::string, TokenType> string_tokens;
+    static const std::unordered_map<int, std::string> token_strings;
+public:
+    static std::string token_type_to_string(TokenType token_type);
+    static TokenType string_to_token_type(const std::string &token);
+    static bool is_keyword(TokenType token_type);
+    static bool is_keyword(const std::string &token);
 };
 
 #endif // TOKEN_H

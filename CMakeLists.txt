@@ -13,6 +13,8 @@ configure_file(
     version.h
 )
 
+enable_testing()
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 
@@ -31,5 +33,3 @@ target_include_directories(
     PRIVATE
     ${CMAKE_BINARY_DIR}
 )
-
-enable_testing()

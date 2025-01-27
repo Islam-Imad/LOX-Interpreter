@@ -1,5 +1,5 @@
 find_package(GTest REQUIRED)
-
+set(google_test GTest::GTest GTest::Main)
 add_executable(
     test_scanner
     test_scanner.cc
@@ -13,15 +13,13 @@ add_executable(
 target_link_libraries(
     test_scanner
     LOX_LIB
-    GTest::GTest
-    GTest::Main
+    ${google_test}
 )
 
 target_link_libraries(
     test_token
     LOX_LIB
-    GTest::GTest
-    GTest::Main
+    ${google_test}
 )
 
 add_test(

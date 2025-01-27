@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 
-Scanner::Scanner(const std::string &source) : kSource(source), start(0), current(0), line(1), offset(0) {}
+Scanner::Scanner(const std::string &source, const TokenUtilites &tokenUtilites) : kTokenUtilites(tokenUtilites), kSource(source), start(0), current(0), line(1), offset(0) {}
 
 bool Scanner::match(char expected) const
 {
-    return !is_at_end() && peek() == expected;
+    return !is_at_end() && (peek() == expected);
 }
 
 bool Scanner::is_at_end() const
@@ -96,11 +96,103 @@ void Scanner::identifier()
 {
     while (is_alphanumeric(peek()))
         advance();
+    const std::string text = kSource.substr(start, offset);
+    TokenType token_type = IDENTIFIER;
 
-    add_token(IDENTIFIER);
+    if (kTokenUtilites.is_keyword(text))
+    {
+        token_type = kTokenUtilites.string_to_token_type(text);
+    }
+
+    add_token(token_type);
 }
 
-std::vector<Token> scan()
+void Scanner::single_line_comment()
 {
-    
+    while (peek() != '\n' && !is_at_end())
+        advance();
+}
+
+std::vector<Token> Scanner::scan()
+{
+    while (!is_at_end())
+    {
+        start = current;
+        char c = advance();
+        switch (c)
+        {
+        case '(':
+            add_token(LEFT_PAREN);
+            break;
+        case ')':
+            add_token(RIGHT_PAREN);
+            break;
+        case '{':
+            add_token(LEFT_BRACE);
+            break;
+        case '}':
+            add_token(RIGHT_BRACE);
+            break;
+        case ',':
+            add_token(COMMA);
+            break;
+        case '.':
+            add_token(DOT);
+            break;
+        case '-':
+            add_token(MINUS);
+            break;
+        case '+':
+            add_token(PLUS);
+            break;
+        case ';':
+            add_token(SEMICOLON);
+            break;
+        case '*':
+            add_token(STAR);
+            break;
+        case '?':
+            add_token(QUESTION);
+            break;
+        case '!':
+            add_token(match('=') ? BANG_EQUAL : BANG);
+            break;
+        case '=':
+            add_token(match('=') ? EQUAL_EQUAL : EQUAL);
+            break;
+        case '<':
+            add_token(match('=') ? LESS_EQUAL : LESS);
+            break;
+        case '>':
+            add_token(match('=') ? GREATER_EQUAL : GREATER);
+            break;
+        case '/':
+            add_token(match('/') ? SLASH_SLASH : SLASH);
+            break;
+        case '#':
+            single_line_comment();
+            break;
+        case '\"':
+            string();
+            break;
+        case ' ':
+        case '\r':
+        case '\t':
+            break;
+        case '\n':
+            line++;
+            break;
+        default:
+            if (is_digit(c))
+                number();
+            else if (is_alpha(c))
+                identifier();
+            else
+            {
+                std::cerr << "Unexpected character." << std::endl;
+                break;
+            }
+        }
+    }
+    return tokens;
 }
