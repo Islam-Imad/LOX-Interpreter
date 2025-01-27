@@ -100,21 +100,6 @@ enum TokenType
     SLASH_SLASH // "//"
 };
 
-// enum TokenCategory
-// {
-//     EQUALITY // ==, !=
-//     ,
-//     COMPARISON // > , < , == , != , >= , <=
-//     ,
-//     TERM // + , -
-//     ,
-//     FACTOR // '*' , /
-//     ,
-//     UNARY // '!' , -
-//     ,
-//     LITERAL // string , number , boolean
-// };
-
 class Token
 {
 private:
