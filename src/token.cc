@@ -134,7 +134,11 @@ std::string TokenUtilites::token_type_to_string(TokenType token_type)
 
 bool TokenUtilites::is_keyword(const std::string &token)
 {
-    return string_tokens.find(token) != string_tokens.end();
+    if (string_tokens.find(token) == string_tokens.end())
+    {
+        return false;
+    }
+    return is_keyword(string_to_token_type(token));
 }
 
 bool TokenUtilites::is_equality(TokenType token_type)
@@ -174,21 +178,5 @@ bool TokenUtilites::is_primary(TokenType token_type)
 
 bool TokenUtilites::is_keyword(TokenType token_type)
 {
-    return 
-    token_type == AND 
-    || token_type == CLASS 
-    || token_type == ELSE 
-    || token_type == FALSE 
-    || token_type == FUN 
-    || token_type == FOR 
-    || token_type == IF 
-    || token_type == NIL 
-    || token_type == OR 
-    || token_type == PRINT 
-    || token_type == RETURN 
-    || token_type == SUPER 
-    || token_type == THIS 
-    || token_type == TRUE 
-    || token_type == VAR 
-    || token_type == WHILE;
+    return token_type == AND || token_type == CLASS || token_type == ELSE || token_type == FALSE || token_type == FUN || token_type == FOR || token_type == IF || token_type == NIL || token_type == OR || token_type == PRINT || token_type == RETURN || token_type == SUPER || token_type == THIS || token_type == TRUE || token_type == VAR || token_type == WHILE;
 }

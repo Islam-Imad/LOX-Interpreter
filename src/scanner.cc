@@ -171,6 +171,8 @@ std::vector<Token> Scanner::scan()
             break;
         case '#':
             single_line_comment();
+            line++;
+            offset = 0;
             break;
         case '\"':
             string();
@@ -178,6 +180,7 @@ std::vector<Token> Scanner::scan()
         case ' ':
         case '\r':
         case '\t':
+            offset = 0;
             break;
         case '\n':
             line++;

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "token.h"
 
-TEST(TokenTest, Test1)
+TEST(TokenTest, Test_01)
 {
     Token token(TokenType::LEFT_PAREN, 1, 0, 1);
     ASSERT_EQ(token.get_type(), TokenType::LEFT_PAREN);
@@ -10,7 +10,7 @@ TEST(TokenTest, Test1)
     ASSERT_EQ(token.get_offset(), 1);
 }
 
-TEST(TokenTest, Test2)
+TEST(TokenTest, Test_02)
 {
     Token token(TokenType::RIGHT_PAREN, 1, 0, 1);
     ASSERT_EQ(token.get_type(), TokenType::RIGHT_PAREN);
@@ -19,7 +19,7 @@ TEST(TokenTest, Test2)
     ASSERT_EQ(token.get_offset(), 1);
 }
 
-TEST(TokenUtilitesTest, Test1)
+TEST(TokenUtilitesTest, Test_01)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_keyword(TokenType::AND));
@@ -29,14 +29,14 @@ TEST(TokenUtilitesTest, Test1)
     ASSERT_TRUE(tu.is_keyword("class"));
 }
 
-TEST(TokenUtilitesTest, Test2)
+TEST(TokenUtilitesTest, Test_02)
 {
     TokenUtilites tu;
     ASSERT_EQ(tu.string_to_token_type("and"), TokenType::AND);
     ASSERT_EQ(tu.string_to_token_type("class"), TokenType::CLASS);
 }
 
-TEST(TokenUtilitesTest, Test3)
+TEST(TokenUtilitesTest, Test_03)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_equality(TokenType::EQUAL_EQUAL));
@@ -46,7 +46,7 @@ TEST(TokenUtilitesTest, Test3)
     ASSERT_TRUE(tu.is_keyword(tu.string_to_token_type("var")));
 }
 
-TEST(TokenUtilitesTest, Test4)
+TEST(TokenUtilitesTest, Test_04)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_comparison(TokenType::GREATER));
@@ -57,7 +57,7 @@ TEST(TokenUtilitesTest, Test4)
     ASSERT_FALSE(tu.is_comparison(TokenType::BANG_EQUAL));
 }
 
-TEST(TokenUtilitesTest, Test5)
+TEST(TokenUtilitesTest, Test_05)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_term(TokenType::PLUS));
@@ -66,7 +66,7 @@ TEST(TokenUtilitesTest, Test5)
     ASSERT_FALSE(tu.is_term(TokenType::SLASH));
 }
 
-TEST(TokenUtilitesTest, Test6)
+TEST(TokenUtilitesTest, Test_06)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_factor(TokenType::STAR));
@@ -75,7 +75,7 @@ TEST(TokenUtilitesTest, Test6)
     ASSERT_FALSE(tu.is_factor(TokenType::MINUS));
 }
 
-TEST(TokenUtilitesTest, Test7)
+TEST(TokenUtilitesTest, Test_07)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_unary(TokenType::BANG));
@@ -84,7 +84,7 @@ TEST(TokenUtilitesTest, Test7)
     ASSERT_FALSE(tu.is_unary(TokenType::SLASH));
 }
 
-TEST(TokenUtilitesTest, Test8)
+TEST(TokenUtilitesTest, Test_08)
 {
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_literal(TokenType::STRING));
