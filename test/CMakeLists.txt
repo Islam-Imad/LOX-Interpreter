@@ -15,6 +15,11 @@ add_executable(
     test_value.cc
 )
 
+add_executable(
+    test_operator_strategy
+    test_operator_strategy.cc
+)
+
 target_link_libraries(
     test_scanner
     LOX_LIB
@@ -33,6 +38,12 @@ target_link_libraries(
     ${google_test}
 )
 
+target_link_libraries(
+    test_operator_strategy
+    LOX_LIB
+    ${google_test}
+)
+
 add_test(
     NAME test_scanner
     COMMAND test_scanner
@@ -46,4 +57,9 @@ add_test(
 add_test(
     NAME test_value
     COMMAND test_value
+)
+
+add_test(
+    NAME test_operator_strategy
+    COMMAND test_operator_strategy
 )

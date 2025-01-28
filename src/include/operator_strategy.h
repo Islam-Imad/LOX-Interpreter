@@ -114,23 +114,11 @@ public:
     Value execute(const Value &left, const Value &right) const override;
 };
 
-class OperatorStrategyFactory
+class OperatorFactory
 {
-    std::unordered_map<std::string, std::unique_ptr<BinaryOperatorStrategy>> binaryOperatorStrategies;
-    std::unordered_map<std::string, std::unique_ptr<UnaryOperatorStrategy>> unaryOperatorStrategies;
-
-    OperatorStrategyFactory() = default;
-    OperatorStrategyFactory(const OperatorStrategyFactory &) = delete;
-    OperatorStrategyFactory &operator=(const OperatorStrategyFactory &) = delete;
-
 public:
-    static OperatorStrategyFactory &get_instance();
     std::unique_ptr<BinaryOperatorStrategy> get_binary_operator_strategy(const std::string &op) const;
     std::unique_ptr<UnaryOperatorStrategy> get_unary_operator_strategy(const std::string &op) const;
-    void register_binary_operator_strategy(const std::string &op, std::unique_ptr<BinaryOperatorStrategy> strategy);
-    void register_unary_operator_strategy(const std::string &op, std::unique_ptr<UnaryOperatorStrategy> strategy);
 };
-
-void set_up_operator_strategy(OperatorStrategyFactory &factory);
 
 #endif // OPERATOR_STRATEGY_H

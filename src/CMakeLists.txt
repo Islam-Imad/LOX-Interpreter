@@ -4,6 +4,8 @@ add_library(
     scanner.cc
     token.cc
     value.cc
+    expression.cc
+    operator_strategy.cc
 )
 
 target_include_directories(

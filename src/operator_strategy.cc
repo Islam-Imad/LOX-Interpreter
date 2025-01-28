@@ -224,39 +224,62 @@ Value LessOperatorStrategy::execute(const Value &left, const Value &right) const
     }
 }
 
-OperatorStrategyFactory &OperatorStrategyFactory::get_instance()
-{
-    static OperatorStrategyFactory instance;
-    return instance;
+std::unique_ptr<BinaryOperatorStrategy> OperatorFactory::get_binary_operator_strategy(const std::string &op) const {
+    if (op == "+"){
+        return std::make_unique<AddOperatorStrategy>();
+    }
+    else if (op == "-"){
+        return std::make_unique<SubtractOperatorStrategy>();
+    }
+    else if (op == "*"){
+        return std::make_unique<MultiplyOperatorStrategy>();
+    }
+    else if (op == "/"){
+        return std::make_unique<DivideOperatorStrategy>();
+    }
+    else if (op == "%"){
+        return std::make_unique<ModulusOperatorStrategy>();
+    }
+    else if (op == "**"){
+        return std::make_unique<PowerOperatorStrategy>();
+    }
+    else if (op == "=="){
+        return std::make_unique<EqualOperatorStrategy>();
+    }
+    else if (op == "!="){
+        return std::make_unique<NotEqualOperatorStrategy>();
+    }
+    else if (op == ">="){
+        return std::make_unique<GreaterEqualOperatorStrategy>();
+    }
+    else if (op == ">"){
+        return std::make_unique<GreaterOperatorStrategy>();
+    }
+    else if (op == "<="){
+        return std::make_unique<LessEqualOperatorStrategy>();
+    }
+    else if (op == "<"){
+        return std::make_unique<LessOperatorStrategy>();
+    }
+    else if (op == "&&"){
+        return std::make_unique<LogicalAndOperatorStrategy>();
+    }
+    else if (op == "||"){
+        return std::make_unique<LogicalOrOperatorStrategy>();
+    }
+    else{
+        throw std::runtime_error("Invalid operator");
+    }
 }
 
-OperatorStrategyFactory::OperatorStrategyFactory()
-{
-    binaryOperatorStrategies["+"] = std::make_unique<AddOperatorStrategy>();
-    binaryOperatorStrategies["-"] = std::make_unique<SubtractOperatorStrategy>();
-    binaryOperatorStrategies["*"] = std::make_unique<MultiplyOperatorStrategy>();
-    binaryOperatorStrategies["/"] = std::make_unique<DivideOperatorStrategy>();
-    binaryOperatorStrategies["%"] = std::make_unique<ModulusOperatorStrategy>();
-    binaryOperatorStrategies["**"] = std::make_unique<PowerOperatorStrategy>();
-    binaryOperatorStrategies["=="] = std::make_unique<EqualOperatorStrategy>();
-    binaryOperatorStrategies["!="] = std::make_unique<NotEqualOperatorStrategy>();
-    binaryOperatorStrategies[">="] = std::make_unique<GreaterEqualOperatorStrategy>();
-    binaryOperatorStrategies[">"] = std::make_unique<GreaterOperatorStrategy>();
-    binaryOperatorStrategies["<="] = std::make_unique<LessEqualOperatorStrategy>();
-    binaryOperatorStrategies["<"] = std::make_unique<LessOperatorStrategy>();
-    binaryOperatorStrategies["&&"] = std::make_unique<LogicalAndOperatorStrategy>();
-    binaryOperatorStrategies["||"] = std::make_unique<LogicalOrOperatorStrategy>();
-
-    unaryOperatorStrategies["-"] = std::make_unique<NegateOperatorStrategy>();
-    unaryOperatorStrategies["!"] = std::make_unique<NotOperatorStrategy>();
-}
-
-std::unique_ptr<BinaryOperatorStrategy> OperatorStrategyFactory::get_binary_operator_strategy(const std::string &op) const
-{
-    return std::make_unique<BinaryOperatorStrategy>(*binaryOperatorStrategies.at(op));
-}
-
-std::unique_ptr<UnaryOperatorStrategy> OperatorStrategyFactory::get_unary_operator_strategy(const std::string &op) const
-{
-    return std::make_unique<UnaryOperatorStrategy>(*unaryOperatorStrategies.at(op));
+std::unique_ptr<UnaryOperatorStrategy> OperatorFactory::get_unary_operator_strategy(const std::string &op) const {
+    if (op == "-"){
+        return std::make_unique<NegateOperatorStrategy>();
+    }
+    else if (op == "!"){
+        return std::make_unique<NotOperatorStrategy>();
+    }
+    else{
+        throw std::runtime_error("Invalid operator");
+    }
 }
