@@ -10,6 +10,11 @@ add_executable(
     test_token.cc
 )
 
+add_executable(
+    test_value
+    test_value.cc
+)
+
 target_link_libraries(
     test_scanner
     LOX_LIB
@@ -22,6 +27,12 @@ target_link_libraries(
     ${google_test}
 )
 
+target_link_libraries(
+    test_value
+    LOX_LIB
+    ${google_test}
+)
+
 add_test(
     NAME test_scanner
     COMMAND test_scanner
@@ -30,4 +41,9 @@ add_test(
 add_test(
     NAME test_token
     COMMAND test_token
+)
+
+add_test(
+    NAME test_value
+    COMMAND test_value
 )

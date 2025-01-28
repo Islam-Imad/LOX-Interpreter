@@ -3,6 +3,7 @@ add_library(
     LOX_LIB
     scanner.cc
     token.cc
+    value.cc
 )
 
 target_include_directories(

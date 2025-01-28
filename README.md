@@ -27,3 +27,16 @@ Implementing a Tree Walk Interpreter.
 - <code>;</code> : Statement Separator
 - <code>(</code> : Left Parenthesis
 - <code>)</code> : Right Parenthesis
+
+### Grammar
+```
+expression     => equality ";" ;
+equality       => comparison ( ( "!=" | "==" ) comparison )* ;
+comparison     => term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term           => factor ( ( "-" | "+" ) factor )* ;
+factor         => unary ( ( "/" | "*" ) unary )* ;
+unary          => ( "!" | "-" ) unary
+               | primary ;
+primary        => NUMBER | STRING | "true" | "false" | "nil"
+               | "(" expression ")" ;
+```
