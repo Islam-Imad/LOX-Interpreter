@@ -72,3 +72,28 @@ TEST(ScannerTest, Test_03)
     ASSERT_EQ(tokens[4].get_start(), 13);
     ASSERT_EQ(tokens[4].get_offset(), 1);
 }
+
+TEST(ScannerTest, Test_04)
+{
+    std::string source = "var a = 1;\nprint a;";
+    TokenUtilites tu = TokenUtilites();
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    ASSERT_EQ(tokens.size(), 8);
+    ASSERT_EQ(tokens[0].get_type(), TokenType::VAR);
+    ASSERT_EQ(tokens[1].get_type(), TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[2].get_type(), TokenType::EQUAL);
+    ASSERT_EQ(tokens[3].get_type(), TokenType::NUMBER);
+    ASSERT_EQ(tokens[4].get_type(), TokenType::SEMICOLON);
+    ASSERT_EQ(tokens[5].get_type(), TokenType::PRINT);
+    ASSERT_EQ(tokens[6].get_type(), TokenType::IDENTIFIER);
+    ASSERT_EQ(tokens[7].get_type(), TokenType::SEMICOLON);
+    ASSERT_EQ(tokens[0].get_line(), 1);
+    ASSERT_EQ(tokens[1].get_line(), 1);
+    ASSERT_EQ(tokens[2].get_line(), 1);
+    ASSERT_EQ(tokens[3].get_line(), 1);
+    ASSERT_EQ(tokens[4].get_line(), 1);
+    ASSERT_EQ(tokens[5].get_line(), 2);
+    ASSERT_EQ(tokens[6].get_line(), 2);
+    ASSERT_EQ(tokens[7].get_line(), 2);
+}

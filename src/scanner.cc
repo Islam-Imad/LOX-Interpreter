@@ -183,6 +183,7 @@ std::vector<Token> Scanner::scan()
             offset = 0;
             break;
         case '\n':
+            offset = 0;
             line++;
             break;
         default:
