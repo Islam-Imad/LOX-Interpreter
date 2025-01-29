@@ -98,6 +98,8 @@ enum TokenType
     SHARP // "#"
     ,
     SLASH_SLASH // "//"
+    ,
+    STAR_STAR // "**"
 };
 
 class Token
@@ -130,6 +132,7 @@ public:
     static bool is_comparison(TokenType token_type);
     static bool is_term(TokenType token_type);
     static bool is_factor(TokenType token_type);
+    static bool is_power(TokenType token_type);
     static bool is_unary(TokenType token_type);
     static bool is_literal(TokenType token_type);
     static bool is_primary(TokenType token_type);

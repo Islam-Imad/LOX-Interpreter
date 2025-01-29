@@ -161,6 +161,11 @@ bool TokenUtilites::is_factor(TokenType token_type)
     return token_type == STAR || token_type == SLASH;
 }
 
+bool TokenUtilites::is_power(TokenType token_type)
+{
+    return token_type == STAR_STAR;
+}
+
 bool TokenUtilites::is_unary(TokenType token_type)
 {
     return token_type == BANG || token_type == MINUS;

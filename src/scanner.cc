@@ -149,7 +149,7 @@ std::vector<Token> Scanner::scan()
             add_token(SEMICOLON);
             break;
         case '*':
-            add_token(STAR);
+            add_token(match('*') ? STAR_STAR : STAR);
             break;
         case '?':
             add_token(QUESTION);
@@ -193,7 +193,7 @@ std::vector<Token> Scanner::scan()
                 identifier();
             else
             {
-                std::cerr << "Unexpected character." << std::endl;
+                throw std::runtime_error("Unexpected character.");
                 break;
             }
         }

@@ -25,6 +25,11 @@ add_executable(
     test_expression.cc
 )
 
+add_executable(
+    test_parser
+    test_parser.cc
+)
+
 target_link_libraries(
     test_scanner
     LOX_LIB
@@ -55,6 +60,12 @@ target_link_libraries(
     ${google_test}
 )
 
+target_link_libraries(
+    test_parser
+    LOX_LIB
+    ${google_test}
+)
+
 add_test(
     NAME test_scanner
     COMMAND test_scanner
@@ -78,4 +89,9 @@ add_test(
 add_test(
     NAME test_expression
     COMMAND test_expression
+)
+
+add_test(
+    NAME test_parser
+    COMMAND test_parser
 )

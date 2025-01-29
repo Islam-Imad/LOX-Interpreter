@@ -6,6 +6,7 @@ add_library(
     value.cc
     expression.cc
     operator_strategy.cc
+    parser.cc
 )
 
 target_include_directories(
