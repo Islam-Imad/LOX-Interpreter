@@ -224,62 +224,104 @@ Value LessOperatorStrategy::execute(const Value &left, const Value &right) const
     }
 }
 
-std::unique_ptr<BinaryOperatorStrategy> OperatorFactory::get_binary_operator_strategy(const std::string &op) const {
-    if (op == "+"){
+std::unique_ptr<BinaryOperatorStrategy> OperatorFactory::get_binary_operator_strategy(const std::string &op) const
+{
+    if (op == "+")
+    {
         return std::make_unique<AddOperatorStrategy>();
     }
-    else if (op == "-"){
+    else if (op == "-")
+    {
         return std::make_unique<SubtractOperatorStrategy>();
     }
-    else if (op == "*"){
+    else if (op == "*")
+    {
         return std::make_unique<MultiplyOperatorStrategy>();
     }
-    else if (op == "/"){
+    else if (op == "/")
+    {
         return std::make_unique<DivideOperatorStrategy>();
     }
-    else if (op == "%"){
+    else if (op == "%")
+    {
         return std::make_unique<ModulusOperatorStrategy>();
     }
-    else if (op == "**"){
+    else if (op == "**")
+    {
         return std::make_unique<PowerOperatorStrategy>();
     }
-    else if (op == "=="){
+    else if (op == "==")
+    {
         return std::make_unique<EqualOperatorStrategy>();
     }
-    else if (op == "!="){
+    else if (op == "!=")
+    {
         return std::make_unique<NotEqualOperatorStrategy>();
     }
-    else if (op == ">="){
+    else if (op == ">=")
+    {
         return std::make_unique<GreaterEqualOperatorStrategy>();
     }
-    else if (op == ">"){
+    else if (op == ">")
+    {
         return std::make_unique<GreaterOperatorStrategy>();
     }
-    else if (op == "<="){
+    else if (op == "<=")
+    {
         return std::make_unique<LessEqualOperatorStrategy>();
     }
-    else if (op == "<"){
+    else if (op == "<")
+    {
         return std::make_unique<LessOperatorStrategy>();
     }
-    else if (op == "&&"){
+    else if (op == "&&")
+    {
         return std::make_unique<LogicalAndOperatorStrategy>();
     }
-    else if (op == "||"){
+    else if (op == "||")
+    {
         return std::make_unique<LogicalOrOperatorStrategy>();
     }
-    else{
+    else
+    {
         throw std::runtime_error("Invalid operator");
     }
 }
 
-std::unique_ptr<UnaryOperatorStrategy> OperatorFactory::get_unary_operator_strategy(const std::string &op) const {
-    if (op == "-"){
+std::unique_ptr<UnaryOperatorStrategy> OperatorFactory::get_unary_operator_strategy(const std::string &op) const
+{
+    if (op == "-")
+    {
         return std::make_unique<NegateOperatorStrategy>();
     }
-    else if (op == "!"){
+    else if (op == "!")
+    {
         return std::make_unique<NotOperatorStrategy>();
     }
-    else{
+    else
+    {
         throw std::runtime_error("Invalid operator");
     }
+}
+
+OperationExecutor::OperationExecutor(OperatorFactory operator_factory) : operator_factory(operator_factory) {}
+
+void OperationExecutor::set_binary_operator_strategy(const std::string &op)
+{
+    binary_operator_strategy = std::move(operator_factory.get_binary_operator_strategy(op));
+}
+
+void OperationExecutor::set_unary_operator_strategy(const std::string &op)
+{
+    unary_operator_strategy = std::move(operator_factory.get_unary_operator_strategy(op));
+}
+
+Value OperationExecutor::execute(const Value &left, const Value &right) const
+{
+    return binary_operator_strategy->execute(left, right);
+}
+
+Value OperationExecutor::execute(const Value &right) const
+{
+    return unary_operator_strategy->execute(right);
 }

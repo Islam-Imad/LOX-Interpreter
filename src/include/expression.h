@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <string>
-#include <value.h>
+#include "value.h"
+#include "operator_strategy.h"
 
 class Expression;
 class BinaryExpression;
@@ -18,6 +19,34 @@ public:
     virtual void visit(const UnaryExpression &expression) = 0;
     virtual void visit(const LiteralExpression &expression) = 0;
     virtual void visit(const GroupingExpression &expression) = 0;
+};
+
+class ExpressionEvaluator : public ExpressionVisitor
+{
+private:
+    Value result;
+    OperationExecutor operation_executor;
+
+public:
+    ExpressionEvaluator(OperationExecutor operation_executor);
+    void visit(const BinaryExpression &expression) override;
+    void visit(const UnaryExpression &expression) override;
+    void visit(const LiteralExpression &expression) override;
+    void visit(const GroupingExpression &expression) override;
+    Value get_result() const;
+};
+
+class ExpressionPrinter : public ExpressionVisitor
+{
+private:
+    std::string result;
+
+public:
+    void visit(const BinaryExpression &expression) override;
+    void visit(const UnaryExpression &expression) override;
+    void visit(const LiteralExpression &expression) override;
+    void visit(const GroupingExpression &expression) override;
+    std::string get_result() const;
 };
 
 class Expression

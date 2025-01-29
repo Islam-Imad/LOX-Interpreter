@@ -121,4 +121,18 @@ public:
     std::unique_ptr<UnaryOperatorStrategy> get_unary_operator_strategy(const std::string &op) const;
 };
 
+class OperationExecutor
+{
+private:
+    std::unique_ptr<BinaryOperatorStrategy> binary_operator_strategy = nullptr;
+    std::unique_ptr<UnaryOperatorStrategy> unary_operator_strategy = nullptr;
+    OperatorFactory operator_factory;
+
+public:
+    OperationExecutor(OperatorFactory operator_factory);
+    void set_binary_operator_strategy(const std::string &op);
+    void set_unary_operator_strategy(const std::string &op);
+    Value execute(const Value &left, const Value &right) const;
+    Value execute(const Value &right) const;
+};
 #endif // OPERATOR_STRATEGY_H

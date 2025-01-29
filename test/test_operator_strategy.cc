@@ -169,3 +169,22 @@ TEST(OperatorStrategy, LessEqualOperatorStrategy)
     result = less_equal_operator_strategy->execute(left, right);
     ASSERT_EQ(result.get<bool>(), true);
 }
+
+TEST(OperatorStrategy, InvalidOperator)
+{
+    OperatorFactory operator_factory;
+    ASSERT_THROW(operator_factory.get_binary_operator_strategy("invalid"), std::runtime_error);
+    ASSERT_THROW(operator_factory.get_unary_operator_strategy("invalid"), std::runtime_error);
+}
+
+TEST(OperationExecutorClass, LessEqualOperatorStrategy)
+{
+    OperatorFactory operator_factory = OperatorFactory();
+    OperationExecutor operation_executor(operator_factory);
+    operation_executor.set_binary_operator_strategy("<=");
+    Value left(1.0);
+    Value right(2.0);
+    Value result = operation_executor.execute(left, right);
+    ASSERT_EQ(result.is_type(ValueType::Boolean), true);
+    ASSERT_EQ(result.get<bool>(), true);
+}
