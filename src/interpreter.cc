@@ -19,5 +19,5 @@ void Interpreter::visit(const ExpressionStatement &statement)
 void Interpreter::visit(const PrintStatement &statement)
 {
     statement.expression->accept(expression_evaluator);
-    std::cout << expression_evaluator.get_result().to_string();
+    std::cout << expression_evaluator.get_result().to_string() << '\n';
 }
