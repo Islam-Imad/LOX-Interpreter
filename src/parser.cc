@@ -3,22 +3,30 @@
 #include "expression.h"
 #include "token.h"
 #include "value.h"
+#include <stdexcept>
 
 Value get_value(Token token, const std::string &source)
 {
-    std::string lexeme = source.substr(token.get_start(), token.get_offset());
-    switch (token.get_type())
+    try
     {
-    case NUMBER:
-        return Value(std::stod(lexeme));
-    case STRING:
-        return Value(lexeme);
-    case BOOLEAN:
-        return Value(lexeme == "true");
-    case NIL:
-        return Value();
-    default:
-        throw std::runtime_error("Invalid value");
+
+        std::string lexeme = source.substr(token.get_start(), token.get_offset());
+        switch (token.get_type())
+        {
+        case NUMBER:
+            return Value(std::stod(lexeme));
+        case STRING:
+            return Value(lexeme);
+        case BOOLEAN:
+            return Value(lexeme == "true");
+        case NIL:
+            return Value();
+        default:
+            throw std::runtime_error("Invalid value");
+        }
+    }
+    catch(std::exception e){
+        throw std::runtime_error("error while getting the value");
     }
 }
 
@@ -54,7 +62,22 @@ bool Parser::is_at_end() const
 
 std::unique_ptr<Expression> Parser::expression()
 {
-    return equality();
+    return boolean_or();
+}
+
+std::unique_ptr<Expression> Parser::boolean_or()
+{
+    std::unique_ptr<Expression> expr = equality();
+
+    while (peek().get_type() == OR)
+    {
+        Token op = peek();
+        advance();
+        std::unique_ptr<Expression> right = equality();
+        expr = std::make_unique<BinaryExpression>(std::move(expr), std::move(right), token_utilites.token_type_to_string(op.get_type()));
+    }
+
+    return expr;
 }
 
 std::unique_ptr<Expression> Parser::equality()
@@ -147,12 +170,12 @@ std::unique_ptr<Expression> Parser::unary()
 
 std::unique_ptr<Expression> Parser::primary()
 {
+    std::cout << current << ' ' << "Herer\n";
     if (token_utilites.is_literal(peek().get_type()))
     {
         Token literal = peek();
         advance();
         return std::make_unique<LiteralExpression>(get_value(literal, kSource));
     }
-
     throw std::runtime_error("Invalid expression");
 }

@@ -26,6 +26,7 @@ private:
 public:
     Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source);
     std::unique_ptr<Expression> expression();
+    std::unique_ptr<Expression> boolean_or();
     std::unique_ptr<Expression> equality();
     std::unique_ptr<Expression> comparison();
     std::unique_ptr<Expression> term();

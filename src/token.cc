@@ -52,6 +52,7 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"true", BOOLEAN},
     {"false", BOOLEAN},
     {"and", AND},
+    {"&&", AND},
     {"class", CLASS},
     {"else", ELSE},
     {"false", FALSE},
@@ -60,13 +61,15 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"if", IF},
     {"nil", NIL},
     {"or", OR},
+    {"||", OR},
     {"print", PRINT},
     {"return", RETURN},
     {"super", SUPER},
     {"this", THIS},
     {"true", TRUE},
     {"var", VAR},
-    {"while", WHILE}};
+    {"while", WHILE},
+    {"**", STAR_STAR}};
 
 const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {RIGHT_PAREN, ")"},
@@ -110,7 +113,8 @@ const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {WHILE, "while"},
     {eof, "EOF"},
     {SHARP, "#"},
-    {SLASH_SLASH, "//"}};
+    {SLASH_SLASH, "//"},
+    {STAR_STAR, "**"}};
 
 TokenType TokenUtilites::string_to_token_type(const std::string &token)
 {

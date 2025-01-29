@@ -274,11 +274,11 @@ std::unique_ptr<BinaryOperatorStrategy> OperatorFactory::get_binary_operator_str
     {
         return std::make_unique<LessOperatorStrategy>();
     }
-    else if (op == "&&")
+    else if (op == "&&" or op == "and")
     {
         return std::make_unique<LogicalAndOperatorStrategy>();
     }
-    else if (op == "||")
+    else if (op == "||" or op == "or")
     {
         return std::make_unique<LogicalOrOperatorStrategy>();
     }

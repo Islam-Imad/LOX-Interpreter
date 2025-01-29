@@ -94,20 +94,20 @@ void ExpressionPrinter::visit(const LiteralExpression &expression)
 void ExpressionPrinter::visit(const UnaryExpression &expression)
 {
     std::string sub = "";
-    sub = "( " + expression.op + " ";
+    sub = "(" + expression.op + " ";
     expression.right->accept(*this);
-    sub += get_result() + " )";
+    sub += get_result() + ")";
     result = sub;
 }
 
 void ExpressionPrinter::visit(const BinaryExpression &expression)
 {
     std::string sub = "";
-    sub = "( ";
+    sub = "(";
     expression.left->accept(*this);
     sub += get_result() + " " + expression.op + " ";
     expression.right->accept(*this);
-    sub += get_result() + " )";
+    sub += get_result() + ")";
     result = sub;
 }
 
