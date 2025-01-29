@@ -49,8 +49,8 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"identifier", IDENTIFIER},
     {"string", STRING},
     {"number", NUMBER},
-    {"true", BOOLEAN},
-    {"false", BOOLEAN},
+    {"true", TRUE},
+    {"false", FALSE},
     {"and", AND},
     {"&&", AND},
     {"class", CLASS},
@@ -177,7 +177,7 @@ bool TokenUtilites::is_unary(TokenType token_type)
 
 bool TokenUtilites::is_literal(TokenType token_type)
 {
-    return token_type == STRING || token_type == NUMBER || token_type == BOOLEAN;
+    return token_type == STRING || token_type == NUMBER || token_type == TRUE || token_type == FALSE || token_type == NIL;
 }
 
 bool TokenUtilites::is_primary(TokenType token_type)

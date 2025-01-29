@@ -17,3 +17,20 @@ bool Value::is_type(const ValueType &type) const
 {
     return valueType == type;
 }
+
+std::string Value::to_string() const
+{
+    switch (valueType)
+    {
+    case ValueType::Number:
+        return std::to_string(std::get<double>(value));
+    case ValueType::String:
+        return std::get<std::string>(value);
+    case ValueType::Boolean:
+        return std::get<bool>(value) ? "true" : "false";
+    case ValueType::Nil:
+        return "nil";
+    default:
+        throw std::runtime_error("Invalid type");
+    }
+}

@@ -9,7 +9,6 @@ Value get_value(Token token, const std::string &source)
 {
     try
     {
-
         std::string lexeme = source.substr(token.get_start(), token.get_offset());
         switch (token.get_type())
         {
@@ -17,16 +16,19 @@ Value get_value(Token token, const std::string &source)
             return Value(std::stod(lexeme));
         case STRING:
             return Value(lexeme);
-        case BOOLEAN:
-            return Value(lexeme == "true");
+        case TRUE:
+            return Value(true);
+        case FALSE:
+            return Value(false);
         case NIL:
             return Value();
         default:
             throw std::runtime_error("Invalid value");
         }
     }
-    catch(std::exception e){
-        throw std::runtime_error("error while getting the value");
+    catch (const std::exception &e)
+    {
+        throw std::runtime_error("Invalid value");
     }
 }
 
@@ -62,14 +64,29 @@ bool Parser::is_at_end() const
 
 std::unique_ptr<Expression> Parser::expression()
 {
-    return boolean_or();
+    return logical_or();
 }
 
-std::unique_ptr<Expression> Parser::boolean_or()
+std::unique_ptr<Expression> Parser::logical_or()
+{
+    std::unique_ptr<Expression> expr = logical_and();
+
+    while (peek().get_type() == OR)
+    {
+        Token op = peek();
+        advance();
+        std::unique_ptr<Expression> right = logical_and();
+        expr = std::make_unique<BinaryExpression>(std::move(expr), std::move(right), token_utilites.token_type_to_string(op.get_type()));
+    }
+
+    return expr;
+}
+
+std::unique_ptr<Expression> Parser::logical_and()
 {
     std::unique_ptr<Expression> expr = equality();
 
-    while (peek().get_type() == OR)
+    while (peek().get_type() == AND)
     {
         Token op = peek();
         advance();
@@ -170,7 +187,6 @@ std::unique_ptr<Expression> Parser::unary()
 
 std::unique_ptr<Expression> Parser::primary()
 {
-    std::cout << current << ' ' << "Herer\n";
     if (token_utilites.is_literal(peek().get_type()))
     {
         Token literal = peek();
@@ -178,4 +194,56 @@ std::unique_ptr<Expression> Parser::primary()
         return std::make_unique<LiteralExpression>(get_value(literal, kSource));
     }
     throw std::runtime_error("Invalid expression");
+}
+
+std::vector<std::unique_ptr<Statement>> Parser::parse()
+{
+    while (!is_at_end())
+    {
+        try
+        {
+            statements.push_back(std::move(statement()));
+        }
+        catch (const std::exception &e)
+        {
+            // std::cerr << e.what() << std::endl;
+            // while (!is_at_end() && peek().get_type() != SEMICOLON)
+            // {
+            //     advance();
+            // }
+            throw std::runtime_error("Invalid statement");
+        }
+    }
+    return std::move(statements);
+}
+
+std::unique_ptr<Statement> Parser::statement()
+{
+    if (peek().get_type() == PRINT)
+    {
+        advance();
+        return print_statement();
+    }
+    return expression_statement();
+}
+std::unique_ptr<Statement> Parser::expression_statement()
+{
+    std::unique_ptr<Expression> expr = expression();
+    if (peek().get_type() != SEMICOLON)
+    {
+        throw std::runtime_error("Expected ';'");
+    }
+    advance();
+    return std::make_unique<ExpressionStatement>(std::move(expr));
+}
+
+std::unique_ptr<Statement> Parser::print_statement()
+{
+    std::unique_ptr<Expression> expr = expression();
+    if (peek().get_type() != SEMICOLON)
+    {
+        throw std::runtime_error("Expected ';'");
+    }
+    advance();
+    return std::make_unique<PrintStatement>(std::move(expr));
 }

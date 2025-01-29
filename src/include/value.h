@@ -62,6 +62,7 @@ public:
         }
         return std::get<T>(value);
     }
+    std::string to_string() const;
 };
 
 #endif // VALUE_H

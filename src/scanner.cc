@@ -5,9 +5,14 @@
 
 Scanner::Scanner(const std::string &source, const TokenUtilites &tokenUtilites) : kTokenUtilites(tokenUtilites), kSource(source), start(0), current(0), line(1), offset(0) {}
 
-bool Scanner::match(char expected) const
+bool Scanner::match(char expected)
 {
-    return !is_at_end() && (peek() == expected);
+    if (is_at_end())
+        return false;
+    if (peek() != expected)
+        return false;
+    advance();
+    return true;
 }
 
 bool Scanner::is_at_end() const
@@ -76,8 +81,6 @@ void Scanner::string()
 {
     while (peek() != '"' && !is_at_end())
     {
-        if (peek() == '\n')
-            line++;
         advance();
     }
 
@@ -88,7 +91,8 @@ void Scanner::string()
     }
 
     advance();
-
+    start++;
+    offset -= 2;
     add_token(STRING);
 }
 
@@ -98,7 +102,8 @@ void Scanner::identifier()
         advance();
     const std::string text = kSource.substr(start, offset);
     TokenType token_type = IDENTIFIER;
-
+    std::cout << text << std::endl;
+    std::cout << kTokenUtilites.is_keyword(text) << std::endl;
     if (kTokenUtilites.is_keyword(text))
     {
         token_type = kTokenUtilites.string_to_token_type(text);

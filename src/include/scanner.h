@@ -20,7 +20,7 @@ private:
     bool is_alpha(char c) const;
     bool is_alphanumeric(char c) const;
     
-    bool match(char expected) const;
+    bool match(char expected);
     bool is_at_end() const;
     char peek() const;
     char peek_next() const;

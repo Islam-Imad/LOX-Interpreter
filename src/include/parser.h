@@ -7,6 +7,7 @@
 #include "expression.h"
 #include "value.h"
 #include "token.h"
+#include "statement.h"
 
 Value get_value(Token token, const std::string &source);
 
@@ -16,6 +17,7 @@ private:
     const std::string kSource;
     const std::vector<Token> tokens;
     const TokenUtilites token_utilites;
+    std::vector<std::unique_ptr<Statement>> statements;
     int current = 0;
     Token previous_token() const;
     Token peek() const;
@@ -25,8 +27,13 @@ private:
 
 public:
     Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source);
+    std::vector<std::unique_ptr<Statement>> parse();
+    std::unique_ptr<Statement> statement();
+    std::unique_ptr<Statement> expression_statement();
+    std::unique_ptr<Statement> print_statement();
     std::unique_ptr<Expression> expression();
-    std::unique_ptr<Expression> boolean_or();
+    std::unique_ptr<Expression> logical_or();
+    std::unique_ptr<Expression> logical_and();
     std::unique_ptr<Expression> equality();
     std::unique_ptr<Expression> comparison();
     std::unique_ptr<Expression> term();

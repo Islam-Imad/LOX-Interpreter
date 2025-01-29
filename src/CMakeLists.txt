@@ -1,4 +1,3 @@
-
 add_library(
     LOX_LIB
     scanner.cc
@@ -7,6 +6,8 @@ add_library(
     expression.cc
     operator_strategy.cc
     parser.cc
+    statement.cc
+    interpreter.cc
 )
 
 target_include_directories(
