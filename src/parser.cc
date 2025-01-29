@@ -187,12 +187,23 @@ std::unique_ptr<Expression> Parser::unary()
 
 std::unique_ptr<Expression> Parser::primary()
 {
-    if (token_utilites.is_literal(peek().get_type()))
+    if (token_utilites.is_primary(peek().get_type()))
     {
-        Token literal = peek();
+        Token primary = peek();
         advance();
-        return std::make_unique<LiteralExpression>(get_value(literal, kSource));
+        if (primary.get_type() == LEFT_PAREN)
+        {
+            std::unique_ptr<Expression> expr = expression();
+            if (peek().get_type() != RIGHT_PAREN)
+            {
+                throw std::runtime_error("Expected ')'");
+            }
+            advance();
+            return std::make_unique<GroupingExpression>(std::move(expr));
+        }
+        return std::make_unique<LiteralExpression>(get_value(primary, kSource));
     }
+
     throw std::runtime_error("Invalid expression");
 }
 
@@ -206,7 +217,7 @@ std::vector<std::unique_ptr<Statement>> Parser::parse()
         }
         catch (const std::exception &e)
         {
-            // std::cerr << e.what() << std::endl;
+            std::cerr << e.what() << std::endl;
             // while (!is_at_end() && peek().get_type() != SEMICOLON)
             // {
             //     advance();

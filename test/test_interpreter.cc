@@ -15,17 +15,18 @@
 
 TEST(Interpreter, TestInterpreter)
 {
-    std::string source = "print true;";
+    std::string source = "print (true and false);";
 
     TokenUtilites tu;
 
     Scanner scanner(source, tu);
     std::vector<Token> tokens = scanner.scan();
-    int n = tokens.size();
-    for (int i = 0; i < n; ++i)
-    {
-        std::cout << tu.token_type_to_string(tokens[i].get_type()) << ' ' << tokens[i].get_offset() << std::endl;
-    }
+    // int n = tokens.size();
+    // for (int i = 0; i < n; i++)
+    // {
+    //     std::cout << tu.token_type_to_string(tokens[i].get_type()) << " " << tokens[i].get_line() << " " << tokens[i].get_start() << " " << tokens[i].get_offset() << std::endl;
+    // }
+    // std::cout << std::endl;
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<Statement>> statements = parser.parse();
 

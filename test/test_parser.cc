@@ -57,9 +57,9 @@ TEST(Parser, Test_03)
     std::vector<Token> tokens;
     TokenUtilites token_utilites;
     std::string source = "true or false";
-    tokens.push_back(Token(BOOLEAN, 1, 0, 4));
+    tokens.push_back(Token(TRUE, 1, 0, 4));
     tokens.push_back(Token(OR, 1, 5, 2));
-    tokens.push_back(Token(BOOLEAN, 1, 8, 5));
+    tokens.push_back(Token(FALSE, 1, 8, 5));
 
     Parser parser(tokens, token_utilites, source);
     std::unique_ptr<Expression> expression = parser.expression();

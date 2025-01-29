@@ -27,6 +27,7 @@ int Token::get_offset() const
 }
 
 const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = {
+    {"(", LEFT_PAREN},
     {")", RIGHT_PAREN},
     {"{", LEFT_BRACE},
     {"}", RIGHT_BRACE},
@@ -72,6 +73,7 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"**", STAR_STAR}};
 
 const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
+    {LEFT_PAREN, "("},
     {RIGHT_PAREN, ")"},
     {LEFT_BRACE, "{"},
     {RIGHT_BRACE, "}"},
@@ -182,7 +184,7 @@ bool TokenUtilites::is_literal(TokenType token_type)
 
 bool TokenUtilites::is_primary(TokenType token_type)
 {
-    return is_literal(token_type) || token_type == LEFT_BRACE || token_type == IDENTIFIER;
+    return is_literal(token_type) || token_type == LEFT_PAREN || token_type == IDENTIFIER;
 }
 
 bool TokenUtilites::is_keyword(TokenType token_type)

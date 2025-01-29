@@ -89,6 +89,7 @@ TEST(TokenUtilitesTest, Test_08)
     TokenUtilites tu;
     ASSERT_TRUE(tu.is_literal(TokenType::STRING));
     ASSERT_TRUE(tu.is_literal(TokenType::NUMBER));
-    ASSERT_TRUE(tu.is_literal(TokenType::BOOLEAN));
+    ASSERT_TRUE(tu.is_literal(TokenType::TRUE));
+    ASSERT_TRUE(tu.is_literal(TokenType::FALSE));
     ASSERT_FALSE(tu.is_literal(TokenType::IDENTIFIER));
 }

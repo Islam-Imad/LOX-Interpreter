@@ -102,8 +102,6 @@ void Scanner::identifier()
         advance();
     const std::string text = kSource.substr(start, offset);
     TokenType token_type = IDENTIFIER;
-    std::cout << text << std::endl;
-    std::cout << kTokenUtilites.is_keyword(text) << std::endl;
     if (kTokenUtilites.is_keyword(text))
     {
         token_type = kTokenUtilites.string_to_token_type(text);
