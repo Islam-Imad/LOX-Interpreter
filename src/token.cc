@@ -37,6 +37,7 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"+", PLUS},
     {";", SEMICOLON},
     {"/", SLASH},
+    {"//", SLASH_SLASH},
     {"*", STAR},
     {"?", QUESTION},
     {"!", BANG},
@@ -83,6 +84,7 @@ const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {PLUS, "+"},
     {SEMICOLON, ";"},
     {SLASH, "/"},
+    {SLASH_SLASH, "//"},
     {STAR, "*"},
     {QUESTION, "?"},
     {BANG, "!"},
@@ -164,7 +166,7 @@ bool TokenUtilites::is_term(TokenType token_type)
 
 bool TokenUtilites::is_factor(TokenType token_type)
 {
-    return token_type == STAR || token_type == SLASH;
+    return token_type == STAR || token_type == SLASH || token_type == SLASH_SLASH;
 }
 
 bool TokenUtilites::is_power(TokenType token_type)
