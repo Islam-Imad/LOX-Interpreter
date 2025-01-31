@@ -3,3 +3,6 @@ print str;
 
 var num = 42;
 print num;
+
+num = str;
+print num;
