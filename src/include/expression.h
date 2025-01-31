@@ -14,6 +14,16 @@ class GroupingExpression;
 class VariableExpression;
 class AssignExpression;
 
+enum ExpressionType
+{
+    BINARY,
+    UNARY,
+    LITERAL,
+    GROUPING,
+    VARIABLE,
+    ASSIGN
+};
+
 class ExpressionVisitor
 {
 public:
@@ -35,9 +45,24 @@ public:
     void visit(const UnaryExpression &expression) override;
     void visit(const LiteralExpression &expression) override;
     void visit(const GroupingExpression &expression) override;
-    // void visit(const VariableExpression &expression) override;
-    // void visit(const AssignExpression &expression) override;
+    void visit(const VariableExpression &expression) override;
+    void visit(const AssignExpression &expression) override;
     std::string get_result() const;
+};
+
+class ExpressionTypeVisitor : public ExpressionVisitor
+{
+private:
+    ExpressionType result;
+
+public:
+    void visit(const BinaryExpression &expression) override;
+    void visit(const UnaryExpression &expression) override;
+    void visit(const LiteralExpression &expression) override;
+    void visit(const GroupingExpression &expression) override;
+    void visit(const VariableExpression &expression) override;
+    void visit(const AssignExpression &expression) override;
+    ExpressionType get_result() const;
 };
 
 class Expression

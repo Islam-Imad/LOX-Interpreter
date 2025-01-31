@@ -65,6 +65,11 @@ void Interpreter::visit(const PrintStatement &statement)
 
 void Interpreter::visit(const VarDeclarationStatement &statement)
 {
-    statement.expression->accept(*this);
-    environment.define(statement.name, result);
+    Value init;
+    if (statement.expression != nullptr)
+    {
+        statement.expression->accept(*this);
+        init = result;
+    }
+    environment.define(statement.name, init);
 }

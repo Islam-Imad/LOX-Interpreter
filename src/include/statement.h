@@ -10,12 +10,31 @@ class ExpressionStatement;
 class PrintStatement;
 class VarDeclarationStatement;
 
+enum StatementType
+{
+    EXPRESSION_STATEMENT,
+    PRINT_STATEMENT,
+    VAR_DECLARATION_STATEMENT
+};
+
 class StatementVisitor
 {
 public:
     virtual void visit(const ExpressionStatement &statement) = 0;
     virtual void visit(const PrintStatement &statement) = 0;
     virtual void visit(const VarDeclarationStatement &statement) = 0;
+};
+
+class StatementTypeVisitor : public StatementVisitor
+{
+private:
+    StatementType result;
+
+public:
+    void visit(const ExpressionStatement &statement) override;
+    void visit(const PrintStatement &statement) override;
+    void visit(const VarDeclarationStatement &statement) override;
+    StatementType get_result() const;
 };
 
 class Statement

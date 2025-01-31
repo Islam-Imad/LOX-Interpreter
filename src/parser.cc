@@ -74,7 +74,6 @@ std::unique_ptr<Expression> Parser::expression()
 std::unique_ptr<Expression> Parser::assignment()
 {
     std::unique_ptr<Expression> expr = logical_or();
-
     if (peek().get_type() == EQUAL)
     {
         VariableExpression *variable = dynamic_cast<VariableExpression *>(expr.get());
@@ -82,8 +81,8 @@ std::unique_ptr<Expression> Parser::assignment()
         {
             throw std::runtime_error("Invalid assignment target");
         }
-        std::string name = variable->name;
         advance();
+        std::string name = variable->name;
         std::unique_ptr<Expression> initialization = assignment();
         expr = std::make_unique<AssignExpression>(name, std::move(initialization));
     }
@@ -234,23 +233,6 @@ std::unique_ptr<Expression> Parser::primary()
     throw std::runtime_error("Invalid expression");
 }
 
-std::vector<std::unique_ptr<Statement>> Parser::parse()
-{
-    while (!is_at_end())
-    {
-        try
-        {
-            statements.push_back(std::move(declaration()));
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << e.what() << std::endl;
-            throw std::runtime_error("Invalid statement");
-        }
-    }
-    return std::move(statements);
-}
-
 std::unique_ptr<Statement> Parser::statement()
 {
     if (peek().get_type() == PRINT)
@@ -291,6 +273,7 @@ std::unique_ptr<Statement> Parser::var_declaration()
     }
     Token name = peek();
     advance();
+
     std::unique_ptr<Expression> expr = nullptr;
     if (peek().get_type() == EQUAL)
     {
@@ -313,4 +296,21 @@ std::unique_ptr<Statement> Parser::declaration()
         return var_declaration();
     }
     return statement();
+}
+
+std::vector<std::unique_ptr<Statement>> Parser::parse()
+{
+    while (!is_at_end())
+    {
+        try
+        {
+            statements.push_back(declaration());
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << std::endl;
+            throw std::runtime_error("Invalid statement");
+        }
+    }
+    return std::move(statements);
 }

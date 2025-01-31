@@ -5,45 +5,81 @@
 #include "value.h"
 #include "scanner.h"
 
-TEST(Parser, Test_01)
+TEST(Parser, expressiont_statement)
 {
-    std::vector<Token> tokens;
     TokenUtilites token_utilites;
-    std::string source = "1 + 2";
-    tokens.push_back(Token(NUMBER, 1, 0, 1));
-    tokens.push_back(Token(PLUS, 1, 2, 1));
-    tokens.push_back(Token(NUMBER, 1, 4, 1));
+    std::string source = "1 + 2;";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
     Parser parser(tokens, token_utilites, source);
-    std::unique_ptr<Expression> expression = parser.expression();
+    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+    ASSERT_EQ(statements.size(), 1);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::EXPRESSION_STATEMENT);
 }
 
-TEST(Parser, Test_02)
+TEST(Parser, print_statement)
 {
-    std::vector<Token> tokens;
     TokenUtilites token_utilites;
-    std::string source = "1 + 2 * 3 ** 2";
-    tokens.push_back(Token(NUMBER, 1, 0, 1));
-    tokens.push_back(Token(PLUS, 1, 2, 1));
-    tokens.push_back(Token(NUMBER, 1, 4, 1));
-
-    tokens.push_back(Token(STAR, 1, 6, 1));
-    tokens.push_back(Token(NUMBER, 1, 8, 1));
-    tokens.push_back(Token(STAR_STAR, 1, 10, 2));
-    tokens.push_back(Token(NUMBER, 1, 13, 1));
+    std::string source = "print 1 + 2;";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
 
     Parser parser(tokens, token_utilites, source);
-    std::unique_ptr<Expression> expression = parser.expression();
+    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+    ASSERT_EQ(statements.size(), 1);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
 }
 
-TEST(Parser, Test_03)
+TEST(Parser, var_declaration_statement)
 {
-    std::vector<Token> tokens;
     TokenUtilites token_utilites;
-    std::string source = "true or false";
-    tokens.push_back(Token(TRUE, 1, 0, 4));
-    tokens.push_back(Token(OR, 1, 5, 2));
-    tokens.push_back(Token(FALSE, 1, 8, 5));
+    std::string source = "var a = 1 + 2;";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
 
     Parser parser(tokens, token_utilites, source);
-    std::unique_ptr<Expression> expression = parser.expression();
+    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+
+    const int expected_statements = 1;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::VAR_DECLARATION_STATEMENT);
+    VarDeclarationStatement *var_declaration_statement = dynamic_cast<VarDeclarationStatement *>(statements[0].get());
+    ASSERT_NE(var_declaration_statement, nullptr);
+    ASSERT_EQ(var_declaration_statement->name, "a");
+}
+
+TEST(Parser, VAR_PRINT)
+{
+    TokenUtilites token_utilites;
+    std::string source = "var a = 1 + 2; print a;";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+
+    const int expected_statements = 2;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::VAR_DECLARATION_STATEMENT);
+    VarDeclarationStatement *var_declaration_statement = dynamic_cast<VarDeclarationStatement *>(statements[0].get());
+    ASSERT_NE(var_declaration_statement, nullptr);
+    ASSERT_EQ(var_declaration_statement->name, "a");
+
+    statements[1]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
+    PrintStatement *print_statement = dynamic_cast<PrintStatement *>(statements[1].get());
+    ASSERT_NE(print_statement, nullptr);
+
+    ExpressionTypeVisitor expression_visitor;
+    print_statement->expression->accept(expression_visitor);
+    ASSERT_EQ(expression_visitor.get_result(), ExpressionType::VARIABLE);
 }

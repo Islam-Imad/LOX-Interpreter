@@ -98,7 +98,56 @@ void ExpressionPrinter::visit(const GroupingExpression &expression)
     expression.expression->accept(*this);
 }
 
+void ExpressionPrinter::visit(const VariableExpression &expression)
+{
+    result = expression.name;
+}
+
+void ExpressionPrinter::visit(const AssignExpression &expression)
+{
+    std::string sub = "";
+    sub = "(" + expression.name + " = ";
+    expression.expression->accept(*this);
+    sub += get_result() + ")";
+    result = sub;
+}
+
 std::string ExpressionPrinter::get_result() const
+{
+    return result;
+}
+
+void ExpressionTypeVisitor::visit(const LiteralExpression &expression)
+{
+    result = ExpressionType::LITERAL;
+}
+
+void ExpressionTypeVisitor::visit(const UnaryExpression &expression)
+{
+    result = ExpressionType::UNARY;
+}
+
+void ExpressionTypeVisitor::visit(const BinaryExpression &expression)
+{
+    result = ExpressionType::BINARY;
+}
+
+void ExpressionTypeVisitor::visit(const GroupingExpression &expression)
+{
+    result = ExpressionType::GROUPING;
+}
+
+void ExpressionTypeVisitor::visit(const VariableExpression &expression)
+{
+    result = ExpressionType::VARIABLE;
+}
+
+void ExpressionTypeVisitor::visit(const AssignExpression &expression)
+{
+    result = ExpressionType::ASSIGN;
+}
+
+ExpressionType ExpressionTypeVisitor::get_result() const
 {
     return result;
 }

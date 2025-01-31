@@ -1,0 +1,5 @@
+var str = "hello world";
+print str;
+
+var num = 42;
+print num;
