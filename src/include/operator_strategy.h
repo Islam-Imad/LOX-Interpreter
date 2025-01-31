@@ -54,6 +54,12 @@ public:
     Value execute(const Value &left, const Value &right) const override;
 };
 
+class FloorDivideOperatorStrategy : public BinaryOperatorStrategy
+{
+public:
+    Value execute(const Value &left, const Value &right) const override;
+};
+
 class NegateOperatorStrategy : public UnaryOperatorStrategy
 {
 public:

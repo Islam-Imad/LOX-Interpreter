@@ -83,6 +83,18 @@ Value DivideOperatorStrategy::execute(const Value &left, const Value &right) con
     }
 }
 
+Value FloorDivideOperatorStrategy::execute(const Value &left, const Value &right) const
+{
+    if (left.is_type(ValueType::Number) && right.is_type(ValueType::Number))
+    {
+        return Value(floor(left.get<double>() / right.get<double>()));
+    }
+    else
+    {
+        throw std::runtime_error("Invalid types for floor division");
+    }
+}
+
 Value NegateOperatorStrategy::execute(const Value &right) const
 {
     if (right.is_type(ValueType::Number))
@@ -241,6 +253,10 @@ std::unique_ptr<BinaryOperatorStrategy> OperatorFactory::get_binary_operator_str
     else if (op == "/")
     {
         return std::make_unique<DivideOperatorStrategy>();
+    }
+    else if (op == "//")
+    {
+        return std::make_unique<FloorDivideOperatorStrategy>();
     }
     else if (op == "%")
     {
