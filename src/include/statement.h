@@ -8,12 +8,14 @@
 class Statement;
 class ExpressionStatement;
 class PrintStatement;
+class VarDeclarationStatement;
 
 class StatementVisitor
 {
 public:
     virtual void visit(const ExpressionStatement &statement) = 0;
     virtual void visit(const PrintStatement &statement) = 0;
+    virtual void visit(const VarDeclarationStatement &statement) = 0;
 };
 
 class Statement
@@ -35,6 +37,15 @@ class PrintStatement : public Statement
 public:
     PrintStatement(std::unique_ptr<const Expression> expression);
     void accept(StatementVisitor &visitor) override;
+    std::unique_ptr<const Expression> expression;
+};
+
+class VarDeclarationStatement : public Statement
+{
+public:
+    VarDeclarationStatement(const std::string &name, std::unique_ptr<const Expression> expression);
+    void accept(StatementVisitor &visitor) override;
+    std::string name;
     std::unique_ptr<const Expression> expression;
 };
 

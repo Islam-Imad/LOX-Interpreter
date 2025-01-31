@@ -5,11 +5,15 @@
 #include "value.h"
 #include <stdexcept>
 
-Value get_value(Token token, const std::string &source)
+std::string get_substr(const Token &token, const std::string &source)
+{
+    return source.substr(token.get_start(), token.get_offset());
+}
+
+Value get_value(Token token, const std::string &lexeme)
 {
     try
     {
-        std::string lexeme = source.substr(token.get_start(), token.get_offset());
         switch (token.get_type())
         {
         case NUMBER:
@@ -64,7 +68,26 @@ bool Parser::is_at_end() const
 
 std::unique_ptr<Expression> Parser::expression()
 {
-    return logical_or();
+    return assignment();
+}
+
+std::unique_ptr<Expression> Parser::assignment()
+{
+    std::unique_ptr<Expression> expr = logical_or();
+
+    if (peek().get_type() == EQUAL)
+    {
+        VariableExpression *variable = dynamic_cast<VariableExpression *>(expr.get());
+        if (variable == nullptr)
+        {
+            throw std::runtime_error("Invalid assignment target");
+        }
+        std::string name = variable->name;
+        advance();
+        std::unique_ptr<Expression> initialization = assignment();
+        expr = std::make_unique<AssignExpression>(name, std::move(initialization));
+    }
+    return expr;
 }
 
 std::unique_ptr<Expression> Parser::logical_or()
@@ -201,7 +224,11 @@ std::unique_ptr<Expression> Parser::primary()
             advance();
             return std::make_unique<GroupingExpression>(std::move(expr));
         }
-        return std::make_unique<LiteralExpression>(get_value(primary, kSource));
+        else if (primary.get_type() == IDENTIFIER)
+        {
+            return std::make_unique<VariableExpression>(get_substr(primary, kSource));
+        }
+        return std::make_unique<LiteralExpression>(get_value(primary, get_substr(primary, kSource)));
     }
 
     throw std::runtime_error("Invalid expression");
@@ -213,15 +240,11 @@ std::vector<std::unique_ptr<Statement>> Parser::parse()
     {
         try
         {
-            statements.push_back(std::move(statement()));
+            statements.push_back(std::move(declaration()));
         }
         catch (const std::exception &e)
         {
             std::cerr << e.what() << std::endl;
-            // while (!is_at_end() && peek().get_type() != SEMICOLON)
-            // {
-            //     advance();
-            // }
             throw std::runtime_error("Invalid statement");
         }
     }
@@ -237,6 +260,7 @@ std::unique_ptr<Statement> Parser::statement()
     }
     return expression_statement();
 }
+
 std::unique_ptr<Statement> Parser::expression_statement()
 {
     std::unique_ptr<Expression> expr = expression();
@@ -257,4 +281,36 @@ std::unique_ptr<Statement> Parser::print_statement()
     }
     advance();
     return std::make_unique<PrintStatement>(std::move(expr));
+}
+
+std::unique_ptr<Statement> Parser::var_declaration()
+{
+    if (peek().get_type() != IDENTIFIER)
+    {
+        throw std::runtime_error("Expected identifier");
+    }
+    Token name = peek();
+    advance();
+    std::unique_ptr<Expression> expr = nullptr;
+    if (peek().get_type() == EQUAL)
+    {
+        advance();
+        expr = expression();
+    }
+    if (peek().get_type() != SEMICOLON)
+    {
+        throw std::runtime_error("Expected ';'");
+    }
+    advance();
+    return std::make_unique<VarDeclarationStatement>(get_substr(name, kSource), std::move(expr));
+}
+
+std::unique_ptr<Statement> Parser::declaration()
+{
+    if (peek().get_type() == VAR)
+    {
+        advance();
+        return var_declaration();
+    }
+    return statement();
 }

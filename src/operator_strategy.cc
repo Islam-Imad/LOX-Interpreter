@@ -308,12 +308,12 @@ OperationExecutor::OperationExecutor(OperatorFactory operator_factory) : operato
 
 void OperationExecutor::set_binary_operator_strategy(const std::string &op)
 {
-    binary_operator_strategy = std::move(operator_factory.get_binary_operator_strategy(op));
+    binary_operator_strategy = operator_factory.get_binary_operator_strategy(op);
 }
 
 void OperationExecutor::set_unary_operator_strategy(const std::string &op)
 {
-    unary_operator_strategy = std::move(operator_factory.get_unary_operator_strategy(op));
+    unary_operator_strategy = operator_factory.get_unary_operator_strategy(op);
 }
 
 Value OperationExecutor::execute(const Value &left, const Value &right) const

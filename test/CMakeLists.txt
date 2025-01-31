@@ -35,6 +35,11 @@ add_executable(
     test_interpreter.cc
 )
 
+add_executable(
+    test_environment
+    test_environment.cc
+)
+
 target_link_libraries(
     test_scanner
     LOX_LIB
@@ -77,6 +82,12 @@ target_link_libraries(
     ${google_test}
 )
 
+target_link_libraries(
+    test_environment
+    LOX_LIB
+    ${google_test}
+)
+
 add_test(
     NAME test_scanner
     COMMAND test_scanner
@@ -110,4 +121,9 @@ add_test(
 add_test(
     NAME test_interpreter
     COMMAND test_interpreter
+)
+
+add_test(
+    NAME test_environment
+    COMMAND test_environment
 )

@@ -2,3 +2,5 @@ print 3.2 > 3.1; # true
 print (3.2 > 3.1) and (3.2 >= 3.1); # true
 print (3.2 < 3.1) or (3.2 < 3.1); # false
 print ((3.2 < 3.1) or (3.2 >= 3.1)); # false
+print ((3.2 < 3.1) or (3.2 >= 3.1)) and (3.2 > 3.1); # true
+print ((3.2 < 3.1) or (3.2 == 3.1)) and (3.2 > 3.1); # false

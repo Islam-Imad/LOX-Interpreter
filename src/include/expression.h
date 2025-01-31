@@ -11,6 +11,8 @@ class BinaryExpression;
 class UnaryExpression;
 class LiteralExpression;
 class GroupingExpression;
+class VariableExpression;
+class AssignExpression;
 
 class ExpressionVisitor
 {
@@ -19,21 +21,8 @@ public:
     virtual void visit(const UnaryExpression &expression) = 0;
     virtual void visit(const LiteralExpression &expression) = 0;
     virtual void visit(const GroupingExpression &expression) = 0;
-};
-
-class ExpressionEvaluator : public ExpressionVisitor
-{
-private:
-    Value result;
-    OperationExecutor operation_executor;
-
-public:
-    ExpressionEvaluator(OperationExecutor operation_executor);
-    void visit(const BinaryExpression &expression) override;
-    void visit(const UnaryExpression &expression) override;
-    void visit(const LiteralExpression &expression) override;
-    void visit(const GroupingExpression &expression) override;
-    Value get_result() const;
+    virtual void visit(const VariableExpression &expression) = 0;
+    virtual void visit(const AssignExpression &expression) = 0;
 };
 
 class ExpressionPrinter : public ExpressionVisitor
@@ -46,6 +35,8 @@ public:
     void visit(const UnaryExpression &expression) override;
     void visit(const LiteralExpression &expression) override;
     void visit(const GroupingExpression &expression) override;
+    // void visit(const VariableExpression &expression) override;
+    // void visit(const AssignExpression &expression) override;
     std::string get_result() const;
 };
 
@@ -91,6 +82,25 @@ public:
     std::unique_ptr<const Expression> expression;
 
     GroupingExpression(std::unique_ptr<const Expression> expression);
+    void accept(ExpressionVisitor &visitor) const override;
+};
+
+class VariableExpression : public Expression
+{
+public:
+    std::string name;
+
+    VariableExpression(const std::string &name);
+    void accept(ExpressionVisitor &visitor) const override;
+};
+
+class AssignExpression : public Expression
+{
+public:
+    std::string name;
+    std::unique_ptr<const Expression> expression;
+
+    AssignExpression(const std::string &name, std::unique_ptr<const Expression> expression);
     void accept(ExpressionVisitor &visitor) const override;
 };
 

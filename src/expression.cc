@@ -33,40 +33,22 @@ void GroupingExpression::accept(ExpressionVisitor &visitor) const
     visitor.visit(*this);
 }
 
-ExpressionEvaluator::ExpressionEvaluator(OperationExecutor operation_executor) : operation_executor(std::move(operation_executor)) {}
+VariableExpression::VariableExpression(const std::string &name) : name(name) {}
 
-void ExpressionEvaluator::visit(const LiteralExpression &expression)
+void VariableExpression::accept(ExpressionVisitor &visitor) const
 {
-    result = expression.value;
+    visitor.visit(*this);
 }
 
-void ExpressionEvaluator::visit(const UnaryExpression &expression)
+AssignExpression::AssignExpression(const std::string &name, std::unique_ptr<const Expression> expression)
+    : name(name), expression(std::move(expression)) {}
+
+void AssignExpression::accept(ExpressionVisitor &visitor) const
 {
-    expression.right->accept(*this);
-    Value right = result;
-    operation_executor.set_unary_operator_strategy(expression.op);
-    result = operation_executor.execute(right);
+    visitor.visit(*this);
 }
 
-void ExpressionEvaluator::visit(const BinaryExpression &expression)
-{
-    expression.left->accept(*this);
-    Value left = result;
-    expression.right->accept(*this);
-    Value right = result;
-    operation_executor.set_binary_operator_strategy(expression.op);
-    result = operation_executor.execute(left, right);
-}
 
-void ExpressionEvaluator::visit(const GroupingExpression &expression)
-{
-    expression.expression->accept(*this);
-}
-
-Value ExpressionEvaluator::get_result() const
-{
-    return result;
-}
 
 void ExpressionPrinter::visit(const LiteralExpression &expression)
 {

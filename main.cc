@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<Statement>> statements = parser.parse();
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    ExpressionEvaluator expression_evaluator(std::move(operation_executor));
-    Interpreter interpreter(std::move(expression_evaluator));
+    Interpreter interpreter(std::move(operation_executor));
     interpreter.interpret(statements);
     return 0;
 }

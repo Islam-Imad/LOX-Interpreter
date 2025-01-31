@@ -19,6 +19,7 @@ private:
     const TokenUtilites token_utilites;
     std::vector<std::unique_ptr<Statement>> statements;
     int current = 0;
+
     Token previous_token() const;
     Token peek() const;
     Token advance();
@@ -31,7 +32,11 @@ public:
     std::unique_ptr<Statement> statement();
     std::unique_ptr<Statement> expression_statement();
     std::unique_ptr<Statement> print_statement();
+    std::unique_ptr<Statement> var_declaration();
+    std::unique_ptr<Statement> declaration();
+
     std::unique_ptr<Expression> expression();
+    std::unique_ptr<Expression> assignment();
     std::unique_ptr<Expression> logical_or();
     std::unique_ptr<Expression> logical_and();
     std::unique_ptr<Expression> equality();

@@ -8,6 +8,7 @@ add_library(
     parser.cc
     statement.cc
     interpreter.cc
+    environment.cc
 )
 
 target_include_directories(

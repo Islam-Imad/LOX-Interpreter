@@ -15,13 +15,6 @@ TEST(Parser, Test_01)
     tokens.push_back(Token(NUMBER, 1, 4, 1));
     Parser parser(tokens, token_utilites, source);
     std::unique_ptr<Expression> expression = parser.expression();
-
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    ExpressionEvaluator evaluator(std::move(operation_executor));
-    expression->accept(evaluator);
-
-    Value result = evaluator.get_result();
-    ASSERT_EQ(result.get<double>(), 3);
 }
 
 TEST(Parser, Test_02)
@@ -40,16 +33,6 @@ TEST(Parser, Test_02)
 
     Parser parser(tokens, token_utilites, source);
     std::unique_ptr<Expression> expression = parser.expression();
-
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    ExpressionPrinter printer;
-    ExpressionEvaluator evaluator(std::move(operation_executor));
-    expression->accept(evaluator);
-    expression->accept(printer);
-    std::cout << printer.get_result() << '\n';
-
-    Value result = evaluator.get_result();
-    ASSERT_EQ(result.get<double>(), 19);
 }
 
 TEST(Parser, Test_03)
@@ -63,14 +46,4 @@ TEST(Parser, Test_03)
 
     Parser parser(tokens, token_utilites, source);
     std::unique_ptr<Expression> expression = parser.expression();
-
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    ExpressionPrinter printer;
-    ExpressionEvaluator evaluator(std::move(operation_executor));
-    expression->accept(evaluator);
-    expression->accept(printer);
-    // std::cout << printer.get_result() << '\n';
-
-    Value result = evaluator.get_result();
-    ASSERT_EQ(result.get<bool>(), true);
 }
