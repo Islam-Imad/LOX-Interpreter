@@ -29,6 +29,7 @@ private:
 public:
     Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source);
     std::vector<std::unique_ptr<const Statement>> parse();
+    std::vector<std::unique_ptr<const Statement>> block();
     std::unique_ptr<Statement> statement();
     std::unique_ptr<Statement> expression_statement();
     std::unique_ptr<Statement> print_statement();

@@ -44,10 +44,6 @@ int main(int argc, char *argv[])
     TokenUtilites tu;
     Scanner scanner(source, tu);
     std::vector<Token> tokens = scanner.scan();
-    // for(auto token : tokens)
-    // {
-    //     std::cout << tu.token_type_to_string(token.get_type()) << " " << token.get_line() << " " << token.get_start() << " " << token.get_offset() << std::endl;
-    // }
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());

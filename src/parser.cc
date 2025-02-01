@@ -233,7 +233,6 @@ std::unique_ptr<Expression> Parser::primary()
     throw std::runtime_error("Invalid expression");
 }
 
-
 std::unique_ptr<Statement> Parser::expression_statement()
 {
     std::unique_ptr<Expression> expr = expression();
@@ -262,6 +261,16 @@ std::unique_ptr<Statement> Parser::statement()
     {
         advance();
         return print_statement();
+    }
+    else if (peek().get_type() == IF)
+    {
+        advance();
+        return if_statement();
+    }
+    else if (peek().get_type() == WHILE)
+    {
+        advance();
+        return while_statement();
     }
     return expression_statement();
 }
@@ -305,17 +314,7 @@ std::unique_ptr<Statement> Parser::if_statement()
     }
     advance();
 
-    std::vector<std::unique_ptr<const Statement>> block;
-    if (peek().get_type() != LEFT_BRACE)
-    {
-        throw std::runtime_error("Expected '{'");
-    }
-    advance();
-    while (peek().get_type() != RIGHT_BRACE)
-    {
-        block.push_back(declaration());
-    }
-    advance();
+    std::vector<std::unique_ptr<const Statement>> Block = block();
 
     std::unique_ptr<Statement> else_branch = nullptr;
     if (peek().get_type() == ELSE)
@@ -350,7 +349,7 @@ std::unique_ptr<Statement> Parser::if_statement()
             throw std::runtime_error("Expected '{' or 'if'");
         }
     }
-    return std::make_unique<IfStatement>(std::move(condition), std::move(block), std::move(else_branch));
+    return std::make_unique<IfStatement>(std::move(condition), std::move(Block), std::move(else_branch));
 }
 
 std::unique_ptr<Statement> Parser::while_statement()
@@ -369,22 +368,26 @@ std::unique_ptr<Statement> Parser::while_statement()
     }
     advance();
 
-    std::vector<std::unique_ptr<const Statement>> block;
+    std::vector<std::unique_ptr<const Statement>> Block = block();
+
+    return std::make_unique<WhileStatement>(std::move(condition), std::move(Block));
+}
+
+std::vector<std::unique_ptr<const Statement>> Parser::block()
+{
     if (peek().get_type() != LEFT_BRACE)
     {
         throw std::runtime_error("Expected '{'");
     }
     advance();
+    std::vector<std::unique_ptr<const Statement>> statements;
     while (peek().get_type() != RIGHT_BRACE)
     {
-        block.push_back(declaration());
+        statements.push_back(declaration());
     }
     advance();
-
-    return std::make_unique<WhileStatement>(std::move(condition), std::move(block));
+    return statements;
 }
-
-
 
 std::unique_ptr<Statement> Parser::declaration()
 {
@@ -392,16 +395,6 @@ std::unique_ptr<Statement> Parser::declaration()
     {
         advance();
         return var_declaration();
-    }
-    else if (peek().get_type() == IF)
-    {
-        advance();
-        return if_statement();
-    }
-    else if (peek().get_type() == WHILE)
-    {
-        advance();
-        return while_statement();
     }
     return statement();
 }
