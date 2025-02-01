@@ -11,6 +11,7 @@ class PrintStatement;
 class VarDeclarationStatement;
 class IfStatement;
 class WhileStatement;
+class ForStatement;
 class CompoundStatement;
 
 enum StatementType
@@ -20,7 +21,8 @@ enum StatementType
     VAR_DECLARATION_STATEMENT,
     IF_STATEMENT,
     WHILE_STATEMENT,
-    COMPOUND_STATEMENT
+    COMPOUND_STATEMENT,
+    FOR_STATEMENT
 };
 
 class StatementVisitor
@@ -32,6 +34,7 @@ public:
     virtual void visit(const IfStatement &statement) = 0;
     virtual void visit(const WhileStatement &statement) = 0;
     virtual void visit(const CompoundStatement &statement) = 0;
+    virtual void visit(const ForStatement &statement) = 0;
 };
 
 class StatementTypeVisitor : public StatementVisitor
@@ -46,6 +49,7 @@ public:
     void visit(const IfStatement &statement) override;
     void visit(const WhileStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
+    void visit(const ForStatement &statement) override;
     StatementType get_result() const;
 };
 
@@ -111,6 +115,19 @@ public:
     void accept(StatementVisitor &visitor) const override;
 
     CompoundStatement(std::vector<std::unique_ptr<const Statement>> statements);
+};
+
+class ForStatement : public Statement
+{
+public:
+    std::unique_ptr<const Statement> initializer;
+    std::unique_ptr<const Expression> condition;
+    std::unique_ptr<const Expression> update;
+    std::unique_ptr<const Statement> block;
+
+    void accept(StatementVisitor &visitor) const override;
+
+    ForStatement(std::unique_ptr<const Statement> initializer, std::unique_ptr<const Expression> condition, std::unique_ptr<const Expression> update, std::unique_ptr<const Statement> block);
 };
 
 #endif // STATEMENT_H

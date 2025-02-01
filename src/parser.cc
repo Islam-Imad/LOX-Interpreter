@@ -272,6 +272,11 @@ std::unique_ptr<Statement> Parser::statement()
         advance();
         return while_statement();
     }
+    else if (peek().get_type() == FOR)
+    {
+        advance();
+        return for_statement();
+    }
     return expression_statement();
 }
 
@@ -365,6 +370,59 @@ std::unique_ptr<Statement> Parser::while_statement()
     std::unique_ptr<const Statement> Block = compound_statement();
 
     return std::make_unique<WhileStatement>(std::move(condition), std::move(Block));
+}
+
+std::unique_ptr<Statement> Parser::for_statement()
+{
+    if (peek().get_type() != LEFT_PAREN)
+    {
+        throw std::runtime_error("Expected '('");
+    }
+    advance();
+
+    std::unique_ptr<Statement> initializer = nullptr;
+    if (peek().get_type() != SEMICOLON)
+    {
+        if (peek().get_type() == VAR)
+        {
+            advance();
+            initializer = var_declaration();
+        }
+        else
+        {
+            initializer = expression_statement();
+        }
+    }
+    else
+    {
+        advance();
+    }
+
+    std::unique_ptr<Expression> condition = nullptr;
+    if (peek().get_type() != SEMICOLON)
+    {
+        condition = expression();
+    }
+    if (peek().get_type() != SEMICOLON)
+    {
+        throw std::runtime_error("Expected ';'");
+    }
+    advance();
+
+    std::unique_ptr<Expression> update = nullptr;
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        update = expression();
+    }
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        throw std::runtime_error("Expected ')'");
+    }
+    advance();
+
+    std::unique_ptr<const Statement> Block = compound_statement();
+
+    return std::make_unique<ForStatement>(std::move(initializer), std::move(condition), std::move(update), std::move(Block));
 }
 
 std::vector<std::unique_ptr<const Statement>> Parser::block()

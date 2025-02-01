@@ -1,0 +1,10 @@
+for(var i = 0;i < 10;i = i + 1){
+    print i;
+}
+
+print "-----------------";
+
+var j = 0;
+for(;j < 10;j = j + 1){
+    print j;
+}

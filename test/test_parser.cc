@@ -13,7 +13,7 @@ TEST(Parser, expressiont_statement)
     std::vector<Token> tokens = scanner.scan();
 
     Parser parser(tokens, token_utilites, source);
-    std::vector<std::unique_ptr< const Statement>> statements = parser.parse();
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
     ASSERT_EQ(statements.size(), 1);
     StatementTypeVisitor visitor;
     statements[0]->accept(visitor);
@@ -43,14 +43,14 @@ TEST(Parser, var_declaration_statement)
     std::vector<Token> tokens = scanner.scan();
 
     Parser parser(tokens, token_utilites, source);
-    std::vector<std::unique_ptr< const Statement>> statements = parser.parse();
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
     const int expected_statements = 1;
     ASSERT_EQ(statements.size(), expected_statements);
     StatementTypeVisitor visitor;
     statements[0]->accept(visitor);
     ASSERT_EQ(visitor.get_result(), StatementType::VAR_DECLARATION_STATEMENT);
-    const  VarDeclarationStatement *var_declaration_statement = dynamic_cast<const VarDeclarationStatement *>(statements[0].get());
+    const VarDeclarationStatement *var_declaration_statement = dynamic_cast<const VarDeclarationStatement *>(statements[0].get());
     ASSERT_NE(var_declaration_statement, nullptr);
     ASSERT_EQ(var_declaration_statement->name, "a");
 }
@@ -84,7 +84,8 @@ TEST(Parser, VAR_PRINT)
     ASSERT_EQ(expression_visitor.get_result(), ExpressionType::VARIABLE);
 }
 
-TEST(Parser, if_statement){
+TEST(Parser, if_statement)
+{
     TokenUtilites token_utilites;
     std::string source = "if (1 < 2) { print 1; }";
     Scanner scanner = Scanner(source, token_utilites);
@@ -102,7 +103,8 @@ TEST(Parser, if_statement){
     ASSERT_NE(if_statement, nullptr);
 }
 
-TEST(Parser, if_else_statemetn){
+TEST(Parser, if_else_statemetn)
+{
     TokenUtilites token_utilites;
     std::string source = "if (1 < 2) { print 1; } else { print 2; }";
     Scanner scanner = Scanner(source, token_utilites);
@@ -120,7 +122,8 @@ TEST(Parser, if_else_statemetn){
     ASSERT_NE(if_statement, nullptr);
 }
 
-TEST(Parser, if_else_if_statement){
+TEST(Parser, if_else_if_statement)
+{
     TokenUtilites token_utilites;
     std::string source = "if (1 < 2) { print 1; } else if (2 < 3) { print 2; }";
     Scanner scanner = Scanner(source, token_utilites);
@@ -138,7 +141,8 @@ TEST(Parser, if_else_if_statement){
     ASSERT_NE(if_statement, nullptr);
 }
 
-TEST(Parser, while_statement){
+TEST(Parser, while_statement)
+{
     TokenUtilites token_utilites;
     std::string source = "while (1 < 2) { print 1; }";
     Scanner scanner = Scanner(source, token_utilites);
@@ -154,4 +158,23 @@ TEST(Parser, while_statement){
     ASSERT_EQ(visitor.get_result(), StatementType::WHILE_STATEMENT);
     const WhileStatement *while_statement = dynamic_cast<const WhileStatement *>(statements[0].get());
     ASSERT_NE(while_statement, nullptr);
+}
+
+TEST(Parser, for_statement)
+{
+    TokenUtilites token_utilites;
+    std::string source = "for (var i = 0; i < 10; i = i + 1) { print i; }";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    const int expected_statements = 1;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::FOR_STATEMENT);
+    const ForStatement *for_statement = dynamic_cast<const ForStatement *>(statements[0].get());
+    ASSERT_NE(for_statement, nullptr);
 }

@@ -24,6 +24,13 @@ WhileStatement::WhileStatement(std::unique_ptr<const Expression> condition, std:
     : condition(std::move(condition))
     , block(std::move(block)) {}
 
+ForStatement::ForStatement(std::unique_ptr<const Statement> init, std::unique_ptr<const Expression> condition, std::unique_ptr<const Expression> update, std::unique_ptr<const Statement> block)
+    : initializer(std::move(init))
+    , condition(std::move(condition))
+    , update(std::move(update))
+    , block(std::move(block)) {}
+
+void ForStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
 
 CompoundStatement::CompoundStatement(std::vector<std::unique_ptr<const Statement>> statements)
     : statements(std::move(statements)) {}
@@ -47,5 +54,7 @@ void StatementTypeVisitor::visit(const IfStatement &statement) { result = Statem
 void StatementTypeVisitor::visit(const WhileStatement &statement) { result = StatementType::WHILE_STATEMENT; }
 
 void StatementTypeVisitor::visit(const CompoundStatement &statement) { result = StatementType::COMPOUND_STATEMENT; }
+
+void StatementTypeVisitor::visit(const ForStatement &statement) { result = StatementType::FOR_STATEMENT; }
 
 StatementType StatementTypeVisitor::get_result() const { return result; }

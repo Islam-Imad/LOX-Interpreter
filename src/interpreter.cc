@@ -3,7 +3,7 @@
 #include "operator_strategy.h"
 #include "statement.h"
 
-Interpreter::Interpreter(OperationExecutor operation_executor, Environment environment)
+Interpreter::Interpreter(OperationExecutor operation_executor, Environment &environment)
     : operation_executor(std::move(operation_executor)), environment(environment) {}
 
 void Interpreter::interpret(const std::vector<std::unique_ptr<const Statement>> &statements)
@@ -77,7 +77,8 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
 
 void Interpreter::visit(const CompoundStatement &statement)
 {
-    Interpreter interpreter(operation_executor.clone(), Environment(&environment));
+    Environment new_environment(&this->environment);
+    Interpreter interpreter(operation_executor.clone(), new_environment);
     interpreter.interpret(statement.statements);
 }
 
@@ -109,5 +110,29 @@ void Interpreter::visit(const WhileStatement &statement)
     {
         statement.block->accept(*this);
         statement.condition->accept(*this);
+    }
+}
+
+void Interpreter::visit(const ForStatement &statement)
+{
+    Environment for_environment(&this->environment);
+    Interpreter for_interpreter(operation_executor.clone(), for_environment);
+    if (statement.initializer != nullptr)
+    {
+        statement.initializer->accept(for_interpreter);
+    }
+    statement.condition->accept(for_interpreter);
+    if (for_interpreter.result.is_type(ValueType::Boolean) == false)
+    {
+        throw std::runtime_error("Invalid type for condition");
+    }
+    while (for_interpreter.result.get<bool>())
+    {
+        statement.block->accept(for_interpreter);
+        if (statement.update != nullptr)
+        {
+            statement.update->accept(for_interpreter);
+        }
+        statement.condition->accept(for_interpreter);
     }
 }

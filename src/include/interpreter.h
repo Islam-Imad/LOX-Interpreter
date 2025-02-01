@@ -17,7 +17,7 @@ private:
     Value result;
 
 public:
-    Interpreter(OperationExecutor operation_executor, Environment environment);
+    Interpreter(OperationExecutor operation_executor, Environment &environment);
     void interpret(const std::vector<std::unique_ptr<const Statement>> &statements);
     
     void visit(const ExpressionStatement &statement) override;
@@ -25,6 +25,7 @@ public:
     void visit(const VarDeclarationStatement &statement) override;
     void visit(const IfStatement &statement) override;
     void visit(const WhileStatement &statement) override;
+    void visit(const ForStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
     
     void visit(const LiteralExpression &expression) override;
