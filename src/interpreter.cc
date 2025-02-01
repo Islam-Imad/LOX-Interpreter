@@ -75,6 +75,12 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
     environment.define(statement.name, init);
 }
 
+void Interpreter::visit(const CompoundStatement &statement)
+{
+    Interpreter interpreter(operation_executor.clone(), Environment(&environment));
+    interpreter.interpret(statement.statements);
+}
+
 void Interpreter::visit(const IfStatement &statement)
 {
     statement.condition->accept(*this);
@@ -84,8 +90,7 @@ void Interpreter::visit(const IfStatement &statement)
     }
     if (result.get<bool>())
     {
-        Interpreter interpreter(operation_executor.clone(), Environment(&environment));
-        interpreter.interpret(move(statement.block));
+        statement.block->accept(*this);
     }
     else if (statement.else_branch != nullptr)
     {
@@ -100,10 +105,8 @@ void Interpreter::visit(const WhileStatement &statement)
     {
         throw std::runtime_error("Invalid type for if condition");
     }
-    Interpreter interpreter(operation_executor.clone(), Environment(&environment));
     while (result.get<bool>())
     {
-        interpreter.interpret(statement.block);
-        statement.condition->accept(*this);
+        statement.block->accept(*this);
     }
 }

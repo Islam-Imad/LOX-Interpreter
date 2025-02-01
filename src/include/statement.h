@@ -11,6 +11,7 @@ class PrintStatement;
 class VarDeclarationStatement;
 class IfStatement;
 class WhileStatement;
+class CompoundStatement;
 
 enum StatementType
 {
@@ -18,7 +19,8 @@ enum StatementType
     PRINT_STATEMENT,
     VAR_DECLARATION_STATEMENT,
     IF_STATEMENT,
-    WHILE_STATEMENT
+    WHILE_STATEMENT,
+    COMPOUND_STATEMENT
 };
 
 class StatementVisitor
@@ -29,6 +31,7 @@ public:
     virtual void visit(const VarDeclarationStatement &statement) = 0;
     virtual void visit(const IfStatement &statement) = 0;
     virtual void visit(const WhileStatement &statement) = 0;
+    virtual void visit(const CompoundStatement &statement) = 0;
 };
 
 class StatementTypeVisitor : public StatementVisitor
@@ -42,6 +45,7 @@ public:
     void visit(const VarDeclarationStatement &statement) override;
     void visit(const IfStatement &statement) override;
     void visit(const WhileStatement &statement) override;
+    void visit(const CompoundStatement &statement) override;
     StatementType get_result() const;
 };
 
@@ -80,23 +84,33 @@ class IfStatement : public Statement
 {
 public:
     std::unique_ptr<const Expression> condition;
-    std::vector<std::unique_ptr<const Statement>> block;
+    std::unique_ptr<const Statement> block;
     std::unique_ptr<Statement> else_branch;
 
     void accept(StatementVisitor &visitor) const override;
 
-    IfStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block, std::unique_ptr<Statement> else_branch);
+    IfStatement(std::unique_ptr<const Expression> condition, std::unique_ptr<const Statement> block, std::unique_ptr<Statement> else_branch);
 };
 
 class WhileStatement : public Statement
 {
 public:
     std::unique_ptr<const Expression> condition;
-    std::vector<std::unique_ptr<const Statement>> block;
+    std::unique_ptr<const Statement> block;
 
     void accept(StatementVisitor &visitor) const override;
 
-    WhileStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block);
+    WhileStatement(std::unique_ptr<const Expression> condition, std::unique_ptr<const Statement> block);
+};
+
+class CompoundStatement : public Statement
+{
+public:
+    std::vector<std::unique_ptr<const Statement>> statements;
+
+    void accept(StatementVisitor &visitor) const override;
+
+    CompoundStatement(std::vector<std::unique_ptr<const Statement>> statements);
 };
 
 #endif // STATEMENT_H

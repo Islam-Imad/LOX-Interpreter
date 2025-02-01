@@ -15,14 +15,20 @@ void PrintStatement::accept(StatementVisitor &visitor) const { visitor.visit(*th
 VarDeclarationStatement::VarDeclarationStatement(const std::string &name, std::unique_ptr<const Expression> expression)
     : name(name), expression(std::move(expression)) {}
 
-IfStatement::IfStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block, std::unique_ptr<Statement> else_branch)
+IfStatement::IfStatement(std::unique_ptr<const Expression> condition, std::unique_ptr<const Statement> block, std::unique_ptr<Statement> else_branch)
     : condition(std::move(condition))
     , block(std::move(block))
     , else_branch(std::move(else_branch)) {}
 
-WhileStatement::WhileStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block)
+WhileStatement::WhileStatement(std::unique_ptr<const Expression> condition, std::unique_ptr<const Statement> block)
     : condition(std::move(condition))
     , block(std::move(block)) {}
+
+
+CompoundStatement::CompoundStatement(std::vector<std::unique_ptr<const Statement>> statements)
+    : statements(std::move(statements)) {}
+
+void CompoundStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
 
 void WhileStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
 
@@ -39,5 +45,7 @@ void StatementTypeVisitor::visit(const VarDeclarationStatement &statement) { res
 void StatementTypeVisitor::visit(const IfStatement &statement) { result = StatementType::IF_STATEMENT; }
 
 void StatementTypeVisitor::visit(const WhileStatement &statement) { result = StatementType::WHILE_STATEMENT; }
+
+void StatementTypeVisitor::visit(const CompoundStatement &statement) { result = StatementType::COMPOUND_STATEMENT; }
 
 StatementType StatementTypeVisitor::get_result() const { return result; }

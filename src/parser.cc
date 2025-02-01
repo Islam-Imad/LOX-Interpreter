@@ -314,7 +314,7 @@ std::unique_ptr<Statement> Parser::if_statement()
     }
     advance();
 
-    std::vector<std::unique_ptr<const Statement>> Block = block();
+    std::unique_ptr<const Statement> Block = compound_statement();
 
     std::unique_ptr<Statement> else_branch = nullptr;
     if (peek().get_type() == ELSE)
@@ -334,14 +334,8 @@ std::unique_ptr<Statement> Parser::if_statement()
         }
         else if (peek().get_type() == LEFT_BRACE)
         {
-            advance();
             std::unique_ptr<const Expression> nested_condition = std::make_unique<LiteralExpression>(Value(true));
-            std::vector<std::unique_ptr<const Statement>> nested_block;
-            while (peek().get_type() != RIGHT_BRACE)
-            {
-                nested_block.push_back(declaration());
-            }
-            advance();
+            std::unique_ptr<const Statement> nested_block = compound_statement();
             else_branch = std::make_unique<IfStatement>(std::move(nested_condition), std::move(nested_block), nullptr);
         }
         else
@@ -368,7 +362,7 @@ std::unique_ptr<Statement> Parser::while_statement()
     }
     advance();
 
-    std::vector<std::unique_ptr<const Statement>> Block = block();
+    std::unique_ptr<const Statement> Block = compound_statement();
 
     return std::make_unique<WhileStatement>(std::move(condition), std::move(Block));
 }
@@ -389,12 +383,22 @@ std::vector<std::unique_ptr<const Statement>> Parser::block()
     return statements;
 }
 
+std::unique_ptr<Statement> Parser::compound_statement()
+{
+    std::vector<std::unique_ptr<const Statement>> statements = block();
+    return std::make_unique<CompoundStatement>(std::move(statements));
+}
+
 std::unique_ptr<Statement> Parser::declaration()
 {
     if (peek().get_type() == VAR)
     {
         advance();
         return var_declaration();
+    }
+    else if (peek().get_type() == LEFT_BRACE)
+    {
+        return compound_statement();
     }
     return statement();
 }
