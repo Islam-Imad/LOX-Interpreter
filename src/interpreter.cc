@@ -108,5 +108,6 @@ void Interpreter::visit(const WhileStatement &statement)
     while (result.get<bool>())
     {
         statement.block->accept(*this);
+        statement.condition->accept(*this);
     }
 }
