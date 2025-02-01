@@ -10,13 +10,15 @@ class ExpressionStatement;
 class PrintStatement;
 class VarDeclarationStatement;
 class IfStatement;
+class WhileStatement;
 
 enum StatementType
 {
     EXPRESSION_STATEMENT,
     PRINT_STATEMENT,
     VAR_DECLARATION_STATEMENT,
-    IF_STATEMENT
+    IF_STATEMENT,
+    WHILE_STATEMENT
 };
 
 class StatementVisitor
@@ -26,6 +28,7 @@ public:
     virtual void visit(const PrintStatement &statement) = 0;
     virtual void visit(const VarDeclarationStatement &statement) = 0;
     virtual void visit(const IfStatement &statement) = 0;
+    virtual void visit(const WhileStatement &statement) = 0;
 };
 
 class StatementTypeVisitor : public StatementVisitor
@@ -38,6 +41,7 @@ public:
     void visit(const PrintStatement &statement) override;
     void visit(const VarDeclarationStatement &statement) override;
     void visit(const IfStatement &statement) override;
+    void visit(const WhileStatement &statement) override;
     StatementType get_result() const;
 };
 
@@ -82,6 +86,17 @@ public:
     void accept(StatementVisitor &visitor) const override;
 
     IfStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block, std::unique_ptr<Statement> else_branch);
+};
+
+class WhileStatement : public Statement
+{
+public:
+    std::unique_ptr<const Expression> condition;
+    std::vector<std::unique_ptr<const Statement>> block;
+
+    void accept(StatementVisitor &visitor) const override;
+
+    WhileStatement(std::unique_ptr<const Expression> condition, std::vector<std::unique_ptr<const Statement>> block);
 };
 
 #endif // STATEMENT_H

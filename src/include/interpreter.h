@@ -24,6 +24,7 @@ public:
     void visit(const PrintStatement &statement) override;
     void visit(const VarDeclarationStatement &statement) override;
     void visit(const IfStatement &statement) override;
+    void visit(const WhileStatement &statement) override;
     
     void visit(const LiteralExpression &expression) override;
     void visit(const UnaryExpression &expression) override;

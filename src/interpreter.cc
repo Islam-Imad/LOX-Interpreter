@@ -84,12 +84,25 @@ void Interpreter::visit(const IfStatement &statement)
     }
     if (result.get<bool>())
     {
-        // under construction
         Interpreter interpreter(operation_executor.clone(), Environment(&environment));
         interpreter.interpret(move(statement.block));
     }
     else if (statement.else_branch != nullptr)
     {
         statement.else_branch->accept(*this);
+    }
+}
+
+void Interpreter::visit(const WhileStatement &statement)
+{
+    statement.condition->accept(*this);
+    if (result.is_type(ValueType::Boolean) == false)
+    {
+        throw std::runtime_error("Invalid type for if condition");
+    }
+    Interpreter interpreter(operation_executor.clone(), Environment(&environment));
+    while (result.get<bool>())
+    {
+        interpreter.interpret(move(statement.block));
     }
 }

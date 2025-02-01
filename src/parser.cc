@@ -352,6 +352,39 @@ std::unique_ptr<Statement> Parser::if_statement()
     return std::make_unique<IfStatement>(std::move(condition), std::move(block), std::move(else_branch));
 }
 
+std::unique_ptr<Statement> Parser::while_statement()
+{
+    if (peek().get_type() != LEFT_PAREN)
+    {
+        throw std::runtime_error("Expected '('");
+    }
+    advance();
+
+    std::unique_ptr<Expression> condition = expression();
+
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        throw std::runtime_error("Expected ')'");
+    }
+    advance();
+
+    std::vector<std::unique_ptr<const Statement>> block;
+    if (peek().get_type() != LEFT_BRACE)
+    {
+        throw std::runtime_error("Expected '{'");
+    }
+    advance();
+    while (peek().get_type() != RIGHT_BRACE)
+    {
+        block.push_back(declaration());
+    }
+    advance();
+
+    return std::make_unique<WhileStatement>(std::move(condition), std::move(block));
+}
+
+
+
 std::unique_ptr<Statement> Parser::declaration()
 {
     if (peek().get_type() == VAR)
@@ -363,6 +396,11 @@ std::unique_ptr<Statement> Parser::declaration()
     {
         advance();
         return if_statement();
+    }
+    else if (peek().get_type() == WHILE)
+    {
+        advance();
+        return while_statement();
     }
     return statement();
 }
