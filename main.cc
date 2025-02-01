@@ -49,9 +49,10 @@ int main(int argc, char *argv[])
     //     std::cout << tu.token_type_to_string(token.get_type()) << " " << token.get_line() << " " << token.get_start() << " " << token.get_offset() << std::endl;
     // }
     Parser parser(tokens, tu, source);
-    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    Interpreter interpreter(std::move(operation_executor));
+    Environment environment;
+    Interpreter interpreter(std::move(operation_executor), environment);
     interpreter.interpret(statements);
     return 0;
 }

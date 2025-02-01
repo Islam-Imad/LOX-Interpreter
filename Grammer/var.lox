@@ -1,0 +1,7 @@
+var number = 9;
+var string = "Odd";
+var boolean = false; 
+
+print number;
+print string;
+print boolean;

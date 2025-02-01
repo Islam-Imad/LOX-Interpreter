@@ -140,5 +140,7 @@ public:
     void set_unary_operator_strategy(const std::string &op);
     Value execute(const Value &left, const Value &right) const;
     Value execute(const Value &right) const;
+
+    OperationExecutor clone() const;
 };
 #endif // OPERATOR_STRATEGY_H

@@ -17,12 +17,13 @@ private:
     Value result;
 
 public:
-    Interpreter(OperationExecutor operation_executor);
-    void interpret(const std::vector<std::unique_ptr<Statement>> &statements);
+    Interpreter(OperationExecutor operation_executor, Environment environment);
+    void interpret(const std::vector<std::unique_ptr<const Statement>> &statements);
     
     void visit(const ExpressionStatement &statement) override;
     void visit(const PrintStatement &statement) override;
     void visit(const VarDeclarationStatement &statement) override;
+    void visit(const IfStatement &statement) override;
     
     void visit(const LiteralExpression &expression) override;
     void visit(const UnaryExpression &expression) override;
@@ -30,7 +31,6 @@ public:
     void visit(const GroupingExpression &expression) override;
     void visit(const VariableExpression &expression) override;
     void visit(const AssignExpression &expression) override;
-
 };
 
 #endif // INTERPRETER_H

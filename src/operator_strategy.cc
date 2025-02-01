@@ -341,3 +341,8 @@ Value OperationExecutor::execute(const Value &right) const
 {
     return unary_operator_strategy->execute(right);
 }
+
+OperationExecutor OperationExecutor::clone() const
+{
+    return OperationExecutor(operator_factory);
+}

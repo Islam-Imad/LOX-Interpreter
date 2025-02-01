@@ -1,5 +1,0 @@
-print 2 + 3 ** 2 * 2; # 20
-print 2 + 2 ** 3 * 2; # 18
-print true and false; # false
-print true and (true or false); # true
-print true and (true or (false)); # true

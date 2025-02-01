@@ -288,6 +288,70 @@ std::unique_ptr<Statement> Parser::var_declaration()
     return std::make_unique<VarDeclarationStatement>(get_substr(name, kSource), std::move(expr));
 }
 
+std::unique_ptr<Statement> Parser::if_statement()
+{
+    if (peek().get_type() != LEFT_PAREN)
+    {
+        throw std::runtime_error("Expected '('");
+    }
+    advance();
+
+    std::unique_ptr<Expression> condition = expression();
+
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        throw std::runtime_error("Expected ')'");
+    }
+    advance();
+
+    std::vector<std::unique_ptr<const Statement>> block;
+    if (peek().get_type() != LEFT_BRACE)
+    {
+        throw std::runtime_error("Expected '{'");
+    }
+    advance();
+    while (peek().get_type() != RIGHT_BRACE)
+    {
+        block.push_back(declaration());
+    }
+    advance();
+
+    std::unique_ptr<Statement> else_branch = nullptr;
+    if (peek().get_type() == ELSE)
+    {
+        advance();
+        if (peek().get_type() == IF)
+        {
+            advance();
+            std::unique_ptr<Statement> else_if = if_statement();
+            StatementTypeVisitor visitor;
+            else_if->accept(visitor);
+            if (visitor.get_result() != StatementType::IF_STATEMENT)
+            {
+                throw std::runtime_error("Expected if statement");
+            }
+            else_branch = std::move(else_if);
+        }
+        else if (peek().get_type() == LEFT_BRACE)
+        {
+            advance();
+            std::unique_ptr<const Expression> nested_condition = std::make_unique<LiteralExpression>(Value(true));
+            std::vector<std::unique_ptr<const Statement>> nested_block;
+            while (peek().get_type() != RIGHT_BRACE)
+            {
+                nested_block.push_back(declaration());
+            }
+            advance();
+            else_branch = std::make_unique<IfStatement>(std::move(nested_condition), std::move(nested_block), nullptr);
+        }
+        else
+        {
+            throw std::runtime_error("Expected '{' or 'if'");
+        }
+    }
+    return std::make_unique<IfStatement>(std::move(condition), std::move(block), std::move(else_branch));
+}
+
 std::unique_ptr<Statement> Parser::declaration()
 {
     if (peek().get_type() == VAR)
@@ -295,10 +359,15 @@ std::unique_ptr<Statement> Parser::declaration()
         advance();
         return var_declaration();
     }
+    else if (peek().get_type() == IF)
+    {
+        advance();
+        return if_statement();
+    }
     return statement();
 }
 
-std::vector<std::unique_ptr<Statement>> Parser::parse()
+std::vector<std::unique_ptr<const Statement>> Parser::parse()
 {
     while (!is_at_end())
     {

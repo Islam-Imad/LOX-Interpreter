@@ -1,0 +1,9 @@
+var number = 9;
+
+if (number == 0) {
+    print "Zero";
+} else if(number > 0) {
+    print "Positive";
+} else {
+    print "Negative";
+}

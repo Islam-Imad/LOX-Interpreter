@@ -22,11 +22,11 @@ TEST(Interpreter, TestInterpreter)
     Scanner scanner(source, tu);
     std::vector<Token> tokens = scanner.scan();
     Parser parser(tokens, tu, source);
-    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
 
-    Interpreter interpreter(std::move(operation_executor));
+    Interpreter interpreter(std::move(operation_executor), Environment());
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -39,10 +39,10 @@ TEST(Interpreter, TestInterpreter2)
     Scanner scanner(source, tu);
     std::vector<Token> tokens = scanner.scan();
     Parser parser(tokens, tu, source);
-    std::vector<std::unique_ptr<Statement>> statements = parser.parse();
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
 
-    Interpreter interpreter(std::move(operation_executor));
+    Interpreter interpreter(std::move(operation_executor), Environment());
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }

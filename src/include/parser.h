@@ -17,7 +17,7 @@ private:
     const std::string kSource;
     const std::vector<Token> tokens;
     const TokenUtilites token_utilites;
-    std::vector<std::unique_ptr<Statement>> statements;
+    std::vector<std::unique_ptr<const Statement>> statements;
     int current = 0;
 
     Token previous_token() const;
@@ -28,11 +28,12 @@ private:
 
 public:
     Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source);
-    std::vector<std::unique_ptr<Statement>> parse();
+    std::vector<std::unique_ptr<const Statement>> parse();
     std::unique_ptr<Statement> statement();
     std::unique_ptr<Statement> expression_statement();
     std::unique_ptr<Statement> print_statement();
     std::unique_ptr<Statement> var_declaration();
+    std::unique_ptr<Statement> if_statement();
     std::unique_ptr<Statement> declaration();
 
     std::unique_ptr<Expression> expression();

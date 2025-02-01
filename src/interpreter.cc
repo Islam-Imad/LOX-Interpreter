@@ -3,9 +3,10 @@
 #include "operator_strategy.h"
 #include "statement.h"
 
-Interpreter::Interpreter(OperationExecutor operation_executor) : operation_executor(std::move(operation_executor)) {}
+Interpreter::Interpreter(OperationExecutor operation_executor, Environment environment)
+    : operation_executor(std::move(operation_executor)), environment(environment) {}
 
-void Interpreter::interpret(const std::vector<std::unique_ptr<Statement>> &statements)
+void Interpreter::interpret(const std::vector<std::unique_ptr<const Statement>> &statements)
 {
     for (const auto &statement : statements)
     {
@@ -72,4 +73,19 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
         init = result;
     }
     environment.define(statement.name, init);
+}
+
+void Interpreter::visit(const IfStatement &statement)
+{
+    statement.condition->accept(*this);
+    if (result.is_type(ValueType::Boolean))
+    {
+        // under construction
+        Interpreter interpreter(operation_executor.clone(), Environment(&environment));
+        interpreter.interpret(move(statement.block));
+    }
+    else if (statement.else_branch != nullptr)
+    {
+        statement.else_branch->accept(*this);
+    }
 }
