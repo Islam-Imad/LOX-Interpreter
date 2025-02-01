@@ -233,15 +233,6 @@ std::unique_ptr<Expression> Parser::primary()
     throw std::runtime_error("Invalid expression");
 }
 
-std::unique_ptr<Statement> Parser::statement()
-{
-    if (peek().get_type() == PRINT)
-    {
-        advance();
-        return print_statement();
-    }
-    return expression_statement();
-}
 
 std::unique_ptr<Statement> Parser::expression_statement()
 {
@@ -263,6 +254,16 @@ std::unique_ptr<Statement> Parser::print_statement()
     }
     advance();
     return std::make_unique<PrintStatement>(std::move(expr));
+}
+
+std::unique_ptr<Statement> Parser::statement()
+{
+    if (peek().get_type() == PRINT)
+    {
+        advance();
+        return print_statement();
+    }
+    return expression_statement();
 }
 
 std::unique_ptr<Statement> Parser::var_declaration()

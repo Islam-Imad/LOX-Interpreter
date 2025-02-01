@@ -14,7 +14,11 @@ std::string Environment::get_undefined_error_message(const std::string &name)
 
 bool Environment::is_defined(const std::string &name) const
 {
-    return values.find(name) != values.end();
+    if (values.find(name) != values.end())
+    {
+        return true;
+    }
+    return false;
 }
 
 void Environment::define(const std::string &name, const Value &value)
@@ -30,6 +34,11 @@ void Environment::assign(const std::string &name, const Value &value)
 {
     if (!is_defined(name))
     {
+        if (parent != nullptr)
+        {
+            parent->assign(name, value);
+            return;
+        }
         throw std::runtime_error(get_undefined_error_message(name));
     }
     values[name] = value;

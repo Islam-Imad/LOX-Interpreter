@@ -103,6 +103,7 @@ void Interpreter::visit(const WhileStatement &statement)
     Interpreter interpreter(operation_executor.clone(), Environment(&environment));
     while (result.get<bool>())
     {
-        interpreter.interpret(move(statement.block));
+        interpreter.interpret(statement.block);
+        statement.condition->accept(*this);
     }
 }
