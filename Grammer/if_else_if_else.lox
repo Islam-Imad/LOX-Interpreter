@@ -1,4 +1,4 @@
-var number = 9;
+var number = -1;
 
 if (number == 0) {
     print "Zero";
@@ -6,4 +6,42 @@ if (number == 0) {
     print "Positive";
 } else {
     print "Negative";
+}
+
+if (true){
+    var a = 1;
+    print a;
+}
+
+number = 7;
+if (number == 1) {
+    print "One";
+} else if(number == 2) {
+    print "Two";
+} else if(number == 3) {
+    print "Three";
+} else if(number == 4) {
+    print "Four";
+} else if(number == 5) {
+    print "Five";
+} else if (number == 6) {
+    print "Six";
+} else {
+    print "Unknown";
+}
+
+number = 5;
+
+if (number == 1) {
+    print "One";
+} else if(number == 2) {
+    print "Two";
+} else if(number == 3) {
+    print "Three";
+} else if(number == 4) {
+    print "Four";
+} else if(number == 5) {
+    print "Five";
+} else if (number == 6) {
+    print "Six";
 }

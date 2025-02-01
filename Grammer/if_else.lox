@@ -1,5 +1,5 @@
 var number = 9;
-
+print number % 2;
 if (number % 2 == 0){
     print "Even";
 } else {

@@ -100,6 +100,7 @@ enum TokenType
     SLASH_SLASH // "//"
     ,
     STAR_STAR // "**"
+    ,MOD // "%"
 };
 
 class Token

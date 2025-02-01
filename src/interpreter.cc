@@ -78,7 +78,11 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
 void Interpreter::visit(const IfStatement &statement)
 {
     statement.condition->accept(*this);
-    if (result.is_type(ValueType::Boolean))
+    if (result.is_type(ValueType::Boolean) == false)
+    {
+        throw std::runtime_error("Invalid type for if condition");
+    }
+    if (result.get<bool>())
     {
         // under construction
         Interpreter interpreter(operation_executor.clone(), Environment(&environment));

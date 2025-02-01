@@ -71,7 +71,11 @@ const std::unordered_map<std::string, TokenType> TokenUtilites::string_tokens = 
     {"true", TRUE},
     {"var", VAR},
     {"while", WHILE},
-    {"**", STAR_STAR}};
+    {"**", STAR_STAR},
+    {"#", SHARP},
+    {"//", SLASH_SLASH},
+    {"%", MOD}
+    };
 
 const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {LEFT_PAREN, "("},
@@ -118,7 +122,9 @@ const std::unordered_map<int, std::string> TokenUtilites::token_strings = {
     {eof, "EOF"},
     {SHARP, "#"},
     {SLASH_SLASH, "//"},
-    {STAR_STAR, "**"}};
+    {STAR_STAR, "**"},
+    {MOD, "%"}
+    };
 
 TokenType TokenUtilites::string_to_token_type(const std::string &token)
 {
@@ -166,7 +172,7 @@ bool TokenUtilites::is_term(TokenType token_type)
 
 bool TokenUtilites::is_factor(TokenType token_type)
 {
-    return token_type == STAR || token_type == SLASH || token_type == SLASH_SLASH;
+    return token_type == STAR || token_type == SLASH || token_type == SLASH_SLASH || token_type == MOD;
 }
 
 bool TokenUtilites::is_power(TokenType token_type)

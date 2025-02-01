@@ -172,6 +172,9 @@ std::vector<Token> Scanner::scan()
         case '/':
             add_token(match('/') ? SLASH_SLASH : SLASH);
             break;
+        case '%':
+            add_token(MOD);
+            break;
         case '#':
             single_line_comment();
             line++;

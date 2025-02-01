@@ -108,3 +108,69 @@ TEST(Parser, if_statement)
     if_statement->block[0]->accept(visitor);
     ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
 }
+
+TEST(Parser, if_else_statement)
+{
+    TokenUtilites token_utilites;
+    std::string source = "if (true) { print 1; } else { print 2; }";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    const int expected_statements = 1;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::IF_STATEMENT);
+    const IfStatement *if_statement = dynamic_cast<const IfStatement *>(statements[0].get());
+    ASSERT_NE(if_statement, nullptr);
+    ExpressionTypeVisitor expression_visitor;
+    if_statement->condition->accept(expression_visitor);
+    ASSERT_EQ(expression_visitor.get_result(), ExpressionType::LITERAL);
+    ASSERT_EQ(if_statement->block.size(), 1);
+    if_statement->block[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
+    ASSERT_NE(if_statement->else_branch, nullptr);
+    if_statement->else_branch->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::IF_STATEMENT);
+    if_statement = dynamic_cast<const IfStatement *>(if_statement->else_branch.get());
+    ASSERT_NE(if_statement, nullptr);
+    ASSERT_EQ(if_statement->block.size(), 1);
+    if_statement->block[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
+}
+
+TEST(Parser, if_else_if_statement)
+{
+    TokenUtilites token_utilites;
+    std::string source = "if (true) { print 1; } else if (true) { print 2; }";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    const int expected_statements = 1;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::IF_STATEMENT);
+    const IfStatement *if_statement = dynamic_cast<const IfStatement *>(statements[0].get());
+    ASSERT_NE(if_statement, nullptr);
+    ExpressionTypeVisitor expression_visitor;
+    if_statement->condition->accept(expression_visitor);
+    ASSERT_EQ(expression_visitor.get_result(), ExpressionType::LITERAL);
+    ASSERT_EQ(if_statement->block.size(), 1);
+    if_statement->block[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
+    ASSERT_NE(if_statement->else_branch, nullptr);
+    if_statement->else_branch->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::IF_STATEMENT);
+    if_statement = dynamic_cast<const IfStatement *>(if_statement->else_branch.get());
+    ASSERT_NE(if_statement, nullptr);
+    ASSERT_EQ(if_statement->block.size(), 1);
+    if_statement->block[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::PRINT_STATEMENT);
+}
