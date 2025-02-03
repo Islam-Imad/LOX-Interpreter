@@ -37,6 +37,16 @@ std::shared_ptr<Object> get_value(Token token, const std::string &lexeme)
 
 Parser::Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source) : tokens(tokens), token_utilites(token_utilites), kSource(source) {}
 
+bool Parser::matches(TokenType type)
+{
+    if (peek().get_type() == type)
+    {
+        advance();
+        return true;
+    }
+    return false;
+}
+
 Token Parser::previous_token() const
 {
     if (current == 0)
@@ -63,6 +73,30 @@ Token Parser::advance()
 bool Parser::is_at_end() const
 {
     return current >= tokens.size();
+}
+
+std::vector<std::string> Parser::parameters()
+{
+    std::vector<std::string> args;
+    if (peek().get_type() != LEFT_PAREN)
+    {
+        throw std::runtime_error("Expected '('");
+    }
+    advance();
+    while (peek().get_type() != RIGHT_PAREN)
+    {
+        do
+        {
+            if (peek().get_type() != IDENTIFIER)
+            {
+                throw std::runtime_error("Expected identifier");
+            }
+            args.push_back(get_substr(peek(), kSource));
+            advance();
+        } while (matches(COMMA));
+    }
+    advance();
+    return args;
 }
 
 std::unique_ptr<Expression> Parser::expression()
@@ -203,7 +237,25 @@ std::unique_ptr<Expression> Parser::unary()
         return std::make_unique<UnaryExpression>(std::move(right), token_utilites.token_type_to_string(op.get_type()));
     }
 
-    return primary();
+    return call();
+}
+
+std::unique_ptr<Expression> Parser::call()
+{
+    std::unique_ptr<Expression> expr = primary();
+    while (true)
+    {
+        if (peek().get_type() == LEFT_PAREN)
+        {
+            advance();
+            expr = finish_call(std::move(expr));
+        }
+        else
+        {
+            break;
+        }
+    }
+    return expr;
 }
 
 std::unique_ptr<Expression> Parser::primary()
@@ -230,6 +282,24 @@ std::unique_ptr<Expression> Parser::primary()
     }
 
     throw std::runtime_error("Invalid expression");
+}
+
+std::unique_ptr<Expression> Parser::finish_call(std::unique_ptr<Expression> callee)
+{
+    std::vector<std::unique_ptr<const Expression>> arguments;
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        do
+        {
+            arguments.push_back(expression());
+        } while (matches(COMMA));
+    }
+    if (peek().get_type() != RIGHT_PAREN)
+    {
+        throw std::runtime_error("Expected ')'");
+    }
+    advance();
+    return std::make_unique<CallExpression>(std::move(callee), std::move(arguments));
 }
 
 std::unique_ptr<Statement> Parser::expression_statement()
@@ -446,6 +516,21 @@ std::unique_ptr<Statement> Parser::compound_statement()
     return std::make_unique<CompoundStatement>(std::move(statements));
 }
 
+std::unique_ptr<Statement> Parser::function_statement()
+{
+    if (peek().get_type() != IDENTIFIER)
+    {
+        throw std::runtime_error("Expected identifier");
+    }
+    Token name = peek();
+    advance();
+
+    std::vector<std::string> args = parameters();
+
+    std::shared_ptr<const Statement> body = compound_statement();
+    return std::make_unique<FunctionStatement>(get_substr(name, kSource), args, body);
+}
+
 std::unique_ptr<Statement> Parser::declaration()
 {
     if (peek().get_type() == VAR)
@@ -456,6 +541,11 @@ std::unique_ptr<Statement> Parser::declaration()
     else if (peek().get_type() == LEFT_BRACE)
     {
         return compound_statement();
+    }
+    else if (peek().get_type() == FUN)
+    {
+        advance();
+        return function_statement();
     }
     return statement();
 }

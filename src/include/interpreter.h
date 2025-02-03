@@ -11,16 +11,16 @@
 
 #include <memory>
 
-class Interpreter : StatementVisitor, ExpressionVisitor
+class Interpreter : public StatementVisitor, public ExpressionVisitor
 {
 private:
     ENV environment;
     OperationExecutor operation_executor;
-    std::shared_ptr<Object> result;
     TypeCheckVisitor type_check_visitor;
     Casting casting;
-
 public:
+
+    std::shared_ptr<Object> result;
     Interpreter(OperationExecutor operation_executor, ENV &environment);
     void interpret(const std::vector<std::unique_ptr<const Statement>> &statements);
 
@@ -31,6 +31,7 @@ public:
     void visit(const WhileStatement &statement) override;
     void visit(const ForStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
+    void visit(const FunctionStatement &statement) override;
 
     void visit(const LiteralExpression &expression) override;
     void visit(const UnaryExpression &expression) override;
@@ -38,6 +39,7 @@ public:
     void visit(const GroupingExpression &expression) override;
     void visit(const VariableExpression &expression) override;
     void visit(const AssignExpression &expression) override;
+    void visit(const CallExpression &expression) override;
 };
 
 #endif // INTERPRETER_H

@@ -1,15 +1,15 @@
 add_library(
     LOX_LIB
-    scanner.cc
-    token.cc
-    expression.cc
-    operator_strategy.cc
-    parser.cc
-    statement.cc
-    interpreter.cc
-    object.cc 
-    function.cc
-    object_visitor.cc
+    "scanner.cc"
+    "token.cc"
+    "expression.cc"
+    "operator_strategy.cc"
+    "parser.cc"
+    "statement.cc"
+    "interpreter.cc"
+    "object.cc" 
+    "function.cc"
+    "object_visitor.cc"
 )
 
 target_include_directories(

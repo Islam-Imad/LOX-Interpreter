@@ -20,6 +20,7 @@ private:
     std::vector<std::unique_ptr<const Statement>> statements;
     int current = 0;
 
+    bool matches(TokenType type);
     Token previous_token() const;
     Token peek() const;
     Token advance();
@@ -30,6 +31,7 @@ public:
     Parser(const std::vector<Token> &tokens, const TokenUtilites &token_utilites, const std::string &source);
     std::vector<std::unique_ptr<const Statement>> parse();
     std::vector<std::unique_ptr<const Statement>> block();
+    std::vector<std::string> parameters();
     std::unique_ptr<Statement> statement();
     std::unique_ptr<Statement> expression_statement();
     std::unique_ptr<Statement> print_statement();
@@ -38,7 +40,10 @@ public:
     std::unique_ptr<Statement> while_statement();
     std::unique_ptr<Statement> for_statement();
     std::unique_ptr<Statement> compound_statement();
+    std::unique_ptr<Statement> function_statement();
     std::unique_ptr<Statement> declaration();
+
+    std::unique_ptr<Expression> finish_call(std::unique_ptr<Expression> callee);
 
     std::unique_ptr<Expression> expression();
     std::unique_ptr<Expression> assignment();
@@ -50,6 +55,7 @@ public:
     std::unique_ptr<Expression> factor();
     std::unique_ptr<Expression> power();
     std::unique_ptr<Expression> unary();
+    std::unique_ptr<Expression> call();
     std::unique_ptr<Expression> primary();
 };
 

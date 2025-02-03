@@ -3,9 +3,9 @@
 #include "operator_strategy.h"
 #include "statement.h"
 #include "object.h"
+#include "function.h"
 
 #include <memory>
-
 
 Interpreter::Interpreter(OperationExecutor operation_executor, ENV &environment)
     : operation_executor(std::move(operation_executor)), environment(environment) {}
@@ -58,6 +58,28 @@ void Interpreter::visit(const AssignExpression &expression)
     environment.assign(expression.name, result);
 }
 
+void Interpreter::visit(const CallExpression &expression)
+{
+    std::vector<std::shared_ptr<Object>> args;
+    for (const auto &arg : expression.arguments)
+    {
+        arg->accept(*this);
+        args.push_back(result);
+    }
+    expression.callee->accept(*this);
+    result->accept(type_check_visitor);
+    if (type_check_visitor.mathces(ObjectType::FUNCTION) == false)
+    {
+        throw std::runtime_error("Invalid type for call expression");
+    }
+    std::shared_ptr<Callable> function = std::dynamic_pointer_cast<Callable>(result);
+    if (function->get_arity() != args.size())
+    {
+        throw std::runtime_error("Invalid number of arguments");
+    }
+    result = function->call(args);
+}
+
 void Interpreter::visit(const ExpressionStatement &statement)
 {
     statement.expression->accept(*this);
@@ -76,6 +98,10 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
     {
         statement.expression->accept(*this);
         init = std::move(result);
+    }
+    else if (statement.expression == nullptr)
+    {
+        init = std::make_shared<Nil>();
     }
     environment.define(statement.name, std::move(init));
 }
@@ -143,4 +169,10 @@ void Interpreter::visit(const ForStatement &statement)
         }
         statement.condition->accept(for_interpreter);
     }
+}
+
+void Interpreter::visit(const FunctionStatement &statemetn)
+{
+    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, environment);
+    environment.define(statemetn.name, function);
 }

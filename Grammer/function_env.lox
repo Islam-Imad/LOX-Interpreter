@@ -1,0 +1,9 @@
+var num = 123;
+
+fun test() {
+    print num;
+}
+
+test();
+num = 456;
+test();

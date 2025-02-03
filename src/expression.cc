@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 
-
 BinaryExpression::BinaryExpression(
     std::unique_ptr<const Expression> left, std::unique_ptr<const Expression> right, const std::string &op)
     : left(std::move(left)), right(std::move(right)), op(op) {}
@@ -51,7 +50,13 @@ void AssignExpression::accept(ExpressionVisitor &visitor) const
     visitor.visit(*this);
 }
 
+CallExpression::CallExpression(std::unique_ptr<const Expression> callee, std::vector<std::unique_ptr<const Expression>> arguments)
+    : callee(std::move(callee)), arguments(std::move(arguments)) {}
 
+void CallExpression::accept(ExpressionVisitor &visitor) const
+{
+    visitor.visit(*this);
+}
 
 void ExpressionPrinter::visit(const LiteralExpression &expression)
 {
@@ -97,6 +102,25 @@ void ExpressionPrinter::visit(const AssignExpression &expression)
     result = sub;
 }
 
+void ExpressionPrinter::visit(const CallExpression &expression)
+{
+    std::string sub = "";
+    sub = "(";
+    expression.callee->accept(*this);
+    sub += get_result() + "(";
+    for (size_t i = 0; i < expression.arguments.size(); i++)
+    {
+        expression.arguments[i]->accept(*this);
+        sub += get_result();
+        if (i != expression.arguments.size() - 1)
+        {
+            sub += ", ";
+        }
+    }
+    sub += "))";
+    result = sub;
+}
+
 std::string ExpressionPrinter::get_result() const
 {
     return result;
@@ -130,6 +154,11 @@ void ExpressionTypeVisitor::visit(const VariableExpression &expression)
 void ExpressionTypeVisitor::visit(const AssignExpression &expression)
 {
     result = ExpressionType::ASSIGN;
+}
+
+void ExpressionTypeVisitor::visit(const CallExpression &expression)
+{
+    result = ExpressionType::CALL;
 }
 
 ExpressionType ExpressionTypeVisitor::get_result() const

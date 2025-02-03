@@ -13,6 +13,7 @@ class IfStatement;
 class WhileStatement;
 class ForStatement;
 class CompoundStatement;
+class FunctionStatement;
 
 enum StatementType
 {
@@ -22,7 +23,8 @@ enum StatementType
     IF_STATEMENT,
     WHILE_STATEMENT,
     COMPOUND_STATEMENT,
-    FOR_STATEMENT
+    FOR_STATEMENT,
+    FUNCTION_STATEMENT
 };
 
 class StatementVisitor
@@ -35,6 +37,7 @@ public:
     virtual void visit(const WhileStatement &statement) = 0;
     virtual void visit(const CompoundStatement &statement) = 0;
     virtual void visit(const ForStatement &statement) = 0;
+    virtual void visit(const FunctionStatement &statement) = 0;
 };
 
 class StatementTypeVisitor : public StatementVisitor
@@ -50,6 +53,7 @@ public:
     void visit(const WhileStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
     void visit(const ForStatement &statement) override;
+    void visit(const FunctionStatement &statement) override;
     StatementType get_result() const;
 };
 
@@ -128,6 +132,18 @@ public:
     void accept(StatementVisitor &visitor) const override;
 
     ForStatement(std::unique_ptr<const Statement> initializer, std::unique_ptr<const Expression> condition, std::unique_ptr<const Expression> update, std::unique_ptr<const Statement> block);
+};
+
+class FunctionStatement : public Statement
+{
+public:
+    std::string name;
+    std::vector<std::string> args;
+    std::shared_ptr<const Statement> body;
+
+    void accept(StatementVisitor &visitor) const override;
+
+    FunctionStatement(const std::string &name, std::vector<std::string> args, std::shared_ptr<const Statement> body);
 };
 
 #endif // STATEMENT_H

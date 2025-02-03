@@ -13,6 +13,7 @@ class LiteralExpression;
 class GroupingExpression;
 class VariableExpression;
 class AssignExpression;
+class CallExpression;
 
 enum ExpressionType
 {
@@ -21,7 +22,8 @@ enum ExpressionType
     LITERAL,
     GROUPING,
     VARIABLE,
-    ASSIGN
+    ASSIGN,
+    CALL
 };
 
 class ExpressionVisitor
@@ -33,6 +35,7 @@ public:
     virtual void visit(const GroupingExpression &expression) = 0;
     virtual void visit(const VariableExpression &expression) = 0;
     virtual void visit(const AssignExpression &expression) = 0;
+    virtual void visit(const CallExpression &expression) = 0;
 };
 
 class ExpressionPrinter : public ExpressionVisitor
@@ -47,6 +50,7 @@ public:
     void visit(const GroupingExpression &expression) override;
     void visit(const VariableExpression &expression) override;
     void visit(const AssignExpression &expression) override;
+    void visit(const CallExpression &expression) override;
     std::string get_result() const;
 };
 
@@ -62,6 +66,7 @@ public:
     void visit(const GroupingExpression &expression) override;
     void visit(const VariableExpression &expression) override;
     void visit(const AssignExpression &expression) override;
+    void visit(const CallExpression &expression) override;
     ExpressionType get_result() const;
 };
 
@@ -126,6 +131,17 @@ public:
     std::unique_ptr<const Expression> expression;
 
     AssignExpression(const std::string &name, std::unique_ptr<const Expression> expression);
+    void accept(ExpressionVisitor &visitor) const override;
+};
+
+class CallExpression : public Expression
+{
+public:
+    std::unique_ptr<const Expression> callee;
+    std::vector<std::unique_ptr<const Expression>> arguments;
+
+    CallExpression(std::unique_ptr<const Expression> callee, std::vector<std::unique_ptr<const Expression>> arguments);
+
     void accept(ExpressionVisitor &visitor) const override;
 };
 
