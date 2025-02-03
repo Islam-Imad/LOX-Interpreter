@@ -3,6 +3,6 @@
 
 TEST(Expression, LiteralExpression)
 {
-    std::shared_ptr<OBJ::Object> value = std::make_shared<OBJ::Number>(1.0);
+    std::shared_ptr<Object> value = std::make_shared<Number>(1.0);
     LiteralExpression literal_expression(value);
 }

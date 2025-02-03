@@ -25,7 +25,7 @@ TEST(Interpreter, TestInterpreter)
 
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
 
-    OBJ::ENV environment;
+    ENV environment;
     Interpreter interpreter(std::move(operation_executor), environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
@@ -43,7 +43,7 @@ TEST(Interpreter, TestInterpreter2)
 
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
 
-    OBJ::ENV environment;
+    ENV environment;
     Interpreter interpreter(std::move(operation_executor), environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }

@@ -22,7 +22,7 @@ void UnaryExpression::accept(ExpressionVisitor &visitor) const
     visitor.visit(*this);
 }
 
-LiteralExpression::LiteralExpression(const std::shared_ptr<OBJ::Object> &value) : value(value) {}
+LiteralExpression::LiteralExpression(const std::shared_ptr<Object> &value) : value(value) {}
 
 void LiteralExpression::accept(ExpressionVisitor &visitor) const
 {

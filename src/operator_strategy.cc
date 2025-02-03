@@ -4,26 +4,26 @@
 #include <cmath>
 #include <unordered_map>
 
-std::shared_ptr<OBJ::Object> AddOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> AddOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(l + r);
+        return std::make_unique<Number>(l + r);
     }
-    else if (left_type == OBJ::ObjectType::STRING && right_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::String>(l + r);
+        return std::make_unique<String>(l + r);
     }
     else
     {
@@ -31,20 +31,20 @@ std::shared_ptr<OBJ::Object> AddOperatorStrategy::execute(const std::shared_ptr<
     }
 }
 
-std::shared_ptr<OBJ::Object> SubtractOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> SubtractOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(l - r);
+        return std::make_unique<Number>(l - r);
     }
     else
     {
@@ -52,20 +52,20 @@ std::shared_ptr<OBJ::Object> SubtractOperatorStrategy::execute(const std::shared
     }
 }
 
-std::shared_ptr<OBJ::Object> MultiplyOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> MultiplyOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(l * r);
+        return std::make_unique<Number>(l * r);
     }
     else
     {
@@ -73,21 +73,21 @@ std::shared_ptr<OBJ::Object> MultiplyOperatorStrategy::execute(const std::shared
     }
 }
 
-std::shared_ptr<OBJ::Object> ModulusOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> ModulusOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
         double q = floor(l / r);
-        return std::make_unique<OBJ::Number>(l - (q * r));
+        return std::make_unique<Number>(l - (q * r));
     }
     else
     {
@@ -95,20 +95,20 @@ std::shared_ptr<OBJ::Object> ModulusOperatorStrategy::execute(const std::shared_
     }
 }
 
-std::shared_ptr<OBJ::Object> PowerOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> PowerOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(pow(l, r));
+        return std::make_unique<Number>(pow(l, r));
     }
     else
     {
@@ -116,20 +116,20 @@ std::shared_ptr<OBJ::Object> PowerOperatorStrategy::execute(const std::shared_pt
     }
 }
 
-std::shared_ptr<OBJ::Object> DivideOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> DivideOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(l / r);
+        return std::make_unique<Number>(l / r);
     }
     else
     {
@@ -137,20 +137,20 @@ std::shared_ptr<OBJ::Object> DivideOperatorStrategy::execute(const std::shared_p
     }
 }
 
-std::shared_ptr<OBJ::Object> FloorDivideOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> FloorDivideOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(floor(l / r));
+        return std::make_unique<Number>(floor(l / r));
     }
     else
     {
@@ -158,17 +158,17 @@ std::shared_ptr<OBJ::Object> FloorDivideOperatorStrategy::execute(const std::sha
     }
 }
 
-std::shared_ptr<OBJ::Object> NegateOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> NegateOperatorStrategy::execute(const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (right_type == OBJ::ObjectType::NUMBER)
+    if (right_type == ObjectType::NUMBER)
     {
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Number>(-r);
+        return std::make_unique<Number>(-r);
     }
     else
     {
@@ -176,17 +176,17 @@ std::shared_ptr<OBJ::Object> NegateOperatorStrategy::execute(const std::shared_p
     }
 }
 
-std::shared_ptr<OBJ::Object> NotOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> NotOperatorStrategy::execute(const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (right_type == OBJ::ObjectType::BOOLEAN)
+    if (right_type == ObjectType::BOOLEAN)
     {
         bool r = casting.cast_to_boolean(right);
-        return std::make_unique<OBJ::Boolean>(!r);
+        return std::make_unique<Boolean>(!r);
     }
     else
     {
@@ -194,20 +194,20 @@ std::shared_ptr<OBJ::Object> NotOperatorStrategy::execute(const std::shared_ptr<
     }
 }
 
-std::shared_ptr<OBJ::Object> LogicalAndOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> LogicalAndOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::BOOLEAN && right_type == OBJ::ObjectType::BOOLEAN)
+    if (left_type == ObjectType::BOOLEAN && right_type == ObjectType::BOOLEAN)
     {
         bool l = casting.cast_to_boolean(left);
         bool r = casting.cast_to_boolean(right);
-        return std::make_unique<OBJ::Boolean>(l && r);
+        return std::make_unique<Boolean>(l && r);
     }
     else
     {
@@ -215,20 +215,20 @@ std::shared_ptr<OBJ::Object> LogicalAndOperatorStrategy::execute(const std::shar
     }
 }
 
-std::shared_ptr<OBJ::Object> LogicalOrOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> LogicalOrOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::BOOLEAN && right_type == OBJ::ObjectType::BOOLEAN)
+    if (left_type == ObjectType::BOOLEAN && right_type == ObjectType::BOOLEAN)
     {
         bool l = casting.cast_to_boolean(left);
         bool r = casting.cast_to_boolean(right);
-        return std::make_unique<OBJ::Boolean>(l || r);
+        return std::make_unique<Boolean>(l || r);
     }
     else
     {
@@ -236,72 +236,72 @@ std::shared_ptr<OBJ::Object> LogicalOrOperatorStrategy::execute(const std::share
     }
 }
 
-std::shared_ptr<OBJ::Object> EqualOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> EqualOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
     if (left_type != right_type)
     {
-        return std::make_unique<OBJ::Boolean>(false);
+        return std::make_unique<Boolean>(false);
     }
-    else if (left_type == OBJ::ObjectType::NUMBER)
+    else if (left_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Boolean>(l == r);
+        return std::make_unique<Boolean>(l == r);
     }
-    else if (left_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::Boolean>(l == r);
+        return std::make_unique<Boolean>(l == r);
     }
-    else if (left_type == OBJ::ObjectType::BOOLEAN)
+    else if (left_type == ObjectType::BOOLEAN)
     {
         bool l = casting.cast_to_boolean(left);
         bool r = casting.cast_to_boolean(right);
-        return std::make_unique<OBJ::Boolean>(l == r);
+        return std::make_unique<Boolean>(l == r);
     }
     else
     {
-        return std::make_unique<OBJ::Boolean>(false);
+        return std::make_unique<Boolean>(false);
     }
 }
 
-std::shared_ptr<OBJ::Object> NotEqualOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> NotEqualOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
-    std::shared_ptr<OBJ::Object> equal = EqualOperatorStrategy().execute(left, right);
+    TypeCheckVisitor visitor;
+    Casting casting;
+    std::shared_ptr<Object> equal = EqualOperatorStrategy().execute(left, right);
     bool e = casting.cast_to_boolean(equal);
-    return std::make_unique<OBJ::Boolean>(!e);
+    return std::make_unique<Boolean>(!e);
 }
 
-std::shared_ptr<OBJ::Object> GreaterEqualOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> GreaterEqualOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Boolean>(l >= r);
+        return std::make_unique<Boolean>(l >= r);
     }
-    else if (left_type == OBJ::ObjectType::STRING && right_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::Boolean>(l >= r);
+        return std::make_unique<Boolean>(l >= r);
     }
     else
     {
@@ -309,26 +309,26 @@ std::shared_ptr<OBJ::Object> GreaterEqualOperatorStrategy::execute(const std::sh
     }
 }
 
-std::shared_ptr<OBJ::Object> GreaterOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> GreaterOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Boolean>(l > r);
+        return std::make_unique<Boolean>(l > r);
     }
-    else if (left_type == OBJ::ObjectType::STRING && right_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::Boolean>(l > r);
+        return std::make_unique<Boolean>(l > r);
     }
     else
     {
@@ -336,26 +336,26 @@ std::shared_ptr<OBJ::Object> GreaterOperatorStrategy::execute(const std::shared_
     }
 }
 
-std::shared_ptr<OBJ::Object> LessEqualOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> LessEqualOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Boolean>(l <= r);
+        return std::make_unique<Boolean>(l <= r);
     }
-    else if (left_type == OBJ::ObjectType::STRING && right_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::Boolean>(l <= r);
+        return std::make_unique<Boolean>(l <= r);
     }
     else
     {
@@ -363,26 +363,26 @@ std::shared_ptr<OBJ::Object> LessEqualOperatorStrategy::execute(const std::share
     }
 }
 
-std::shared_ptr<OBJ::Object> LessOperatorStrategy::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> LessOperatorStrategy::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
-    OBJ::TypeCheckVisitor visitor;
-    OBJ::Casting casting;
+    TypeCheckVisitor visitor;
+    Casting casting;
     left->accept(visitor);
-    OBJ::ObjectType left_type = visitor.get_type();
+    ObjectType left_type = visitor.get_type();
     right->accept(visitor);
-    OBJ::ObjectType right_type = visitor.get_type();
+    ObjectType right_type = visitor.get_type();
 
-    if (left_type == OBJ::ObjectType::NUMBER && right_type == OBJ::ObjectType::NUMBER)
+    if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
         double l = casting.cast_to_number(left);
         double r = casting.cast_to_number(right);
-        return std::make_unique<OBJ::Boolean>(l < r);
+        return std::make_unique<Boolean>(l < r);
     }
-    else if (left_type == OBJ::ObjectType::STRING && right_type == OBJ::ObjectType::STRING)
+    else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left);
         std::string r = casting.cast_to_string(right);
-        return std::make_unique<OBJ::Boolean>(l < r);
+        return std::make_unique<Boolean>(l < r);
     }
     else
     {
@@ -486,12 +486,12 @@ void OperationExecutor::set_unary_operator_strategy(const std::string &op)
     unary_operator_strategy = operator_factory.get_unary_operator_strategy(op);
 }
 
-std::shared_ptr<OBJ::Object> OperationExecutor::execute(const std::shared_ptr<OBJ::Object> &left, const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> OperationExecutor::execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const
 {
     return binary_operator_strategy->execute(left, right);
 }
 
-std::shared_ptr<OBJ::Object> OperationExecutor::execute(const std::shared_ptr<OBJ::Object> &right) const
+std::shared_ptr<Object> OperationExecutor::execute(const std::shared_ptr<Object> &right) const
 {
     return unary_operator_strategy->execute(right);
 }

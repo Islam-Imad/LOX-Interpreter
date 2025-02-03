@@ -95,9 +95,9 @@ public:
 class LiteralExpression : public Expression
 {
 public:
-    std::shared_ptr<OBJ::Object> value;
+    std::shared_ptr<Object> value;
 
-    LiteralExpression(const std::shared_ptr<OBJ::Object> &value);
+    LiteralExpression(const std::shared_ptr<Object> &value);
     void accept(ExpressionVisitor &visitor) const override;
 };
 

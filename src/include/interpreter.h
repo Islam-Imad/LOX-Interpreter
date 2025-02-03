@@ -14,14 +14,14 @@
 class Interpreter : StatementVisitor, ExpressionVisitor
 {
 private:
-    OBJ::ENV environment;
+    ENV environment;
     OperationExecutor operation_executor;
-    std::shared_ptr<OBJ::Object> result;
-    OBJ::TypeCheckVisitor type_check_visitor;
-    OBJ::Casting casting;
+    std::shared_ptr<Object> result;
+    TypeCheckVisitor type_check_visitor;
+    Casting casting;
 
 public:
-    Interpreter(OperationExecutor operation_executor, OBJ::ENV &environment);
+    Interpreter(OperationExecutor operation_executor, ENV &environment);
     void interpret(const std::vector<std::unique_ptr<const Statement>> &statements);
 
     void visit(const ExpressionStatement &statement) override;

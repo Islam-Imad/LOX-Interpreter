@@ -7,7 +7,9 @@ add_library(
     parser.cc
     statement.cc
     interpreter.cc
-    object.cc
+    object.cc 
+    function.cc
+    object_visitor.cc
 )
 
 target_include_directories(

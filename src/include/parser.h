@@ -9,7 +9,7 @@
 #include "token.h"
 #include "statement.h"
 
-std::shared_ptr<OBJ::Object> get_value(Token token, const std::string &source);
+std::shared_ptr<Object> get_value(Token token, const std::string &source);
 
 class Parser
 {
