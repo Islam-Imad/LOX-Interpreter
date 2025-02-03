@@ -1,42 +1,69 @@
 #include <gtest/gtest.h>
-#include "environment.h"
+#include "object.h"
 
 TEST(Environment, Define)
 {
-    Environment environment;
-    environment.define("foo", Value(42.0));
-    ASSERT_TRUE(environment.is_defined("foo"));
-    ASSERT_EQ(environment.get("foo").get<double>(), 42.0);
+    OBJ::ENV environment;
+    environment.define("foo", std::make_shared<OBJ::Number>(42.0));
+    ASSERT_TRUE(environment.contains("foo"));
 }
 
 TEST(Environment, Assign)
 {
-    Environment environment;
-    environment.define("foo", Value(42.0));
-    ASSERT_TRUE(environment.is_defined("foo"));
-    environment.assign("foo", Value(43.0));
-    ASSERT_TRUE(environment.is_defined("foo"));
-    ASSERT_EQ(environment.get("foo").get<double>(), 43.0);
+    OBJ::ENV environment;
+    environment.define("foo", std::make_shared<OBJ::Number>(42.0));
+    ASSERT_TRUE(environment.contains("foo"));
+    environment.assign("foo", std::make_shared<OBJ::Number>(43.0));
+    ASSERT_TRUE(environment.contains("foo"));
+
+    auto value = environment.get("foo");
+    OBJ::Casting casting;
+    OBJ::TypeCheckVisitor visitor;
+    value->get()->accept(visitor);
+    ASSERT_EQ(visitor.get_type(), OBJ::ObjectType::NUMBER);
+    double number = casting.cast_to_number(*value);
+    ASSERT_EQ(number, 43.0);
 }
 
 TEST(Environment, Get)
 {
-    Environment environment;
-    environment.define("foo", Value(42.0));
-    ASSERT_TRUE(environment.is_defined("foo"));
-    ASSERT_EQ(environment.get("foo").get<double>(), 42.0);
+    OBJ::ENV environment;
+    environment.define("foo", std::make_shared<OBJ::Number>(42.0));
+    ASSERT_TRUE(environment.contains("foo"));
+
+    auto value = environment.get("foo");
+    OBJ::Casting casting;
+    OBJ::TypeCheckVisitor visitor;
+    value->get()->accept(visitor);
+    ASSERT_EQ(visitor.get_type(), OBJ::ObjectType::NUMBER);
+    double number = casting.cast_to_number(*value);
+    ASSERT_EQ(number, 42.0);
 }
 
 TEST(Environment, IsDefined)
 {
-    Environment environment;
-    environment.define("foo", Value(42.0));
-    ASSERT_TRUE(environment.is_defined("foo"));
-    ASSERT_FALSE(environment.is_defined("bar"));
+    OBJ::ENV environment;
+    environment.define("foo", std::make_shared<OBJ::Number>(42.0));
+    ASSERT_TRUE(environment.contains("foo"));
+    ASSERT_FALSE(environment.contains("bar"));
 }
 
 TEST(Environment, Undefined)
 {
-    Environment environment;
+    OBJ::ENV environment;
     ASSERT_THROW(environment.get("foo"), std::runtime_error);
+}
+
+TEST(Environment, STRING){
+    OBJ::ENV environment;
+    environment.define("foo", std::make_shared<OBJ::String>("Hello, World!"));
+    ASSERT_TRUE(environment.contains("foo"));
+
+    auto value = environment.get("foo");
+    OBJ::Casting casting;
+    OBJ::TypeCheckVisitor visitor;
+    value->get()->accept(visitor);
+    ASSERT_EQ(visitor.get_type(), OBJ::ObjectType::STRING);
+    std::string str = casting.cast_to_string(*value);
+    ASSERT_EQ(str, "Hello, World!");
 }

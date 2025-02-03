@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 #include "parser.h"
+#include "statement.h"
 #include "expression.h"
-#include "token.h"
-#include "value.h"
 #include "scanner.h"
 
 TEST(Parser, expressiont_statement)

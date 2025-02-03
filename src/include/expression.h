@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "value.h"
+#include "object.h"
 #include "operator_strategy.h"
 
 class Expression;
@@ -95,9 +95,9 @@ public:
 class LiteralExpression : public Expression
 {
 public:
-    Value value;
+    std::shared_ptr<OBJ::Object> value;
 
-    LiteralExpression(const Value &value);
+    LiteralExpression(const std::shared_ptr<OBJ::Object> &value);
     void accept(ExpressionVisitor &visitor) const override;
 };
 

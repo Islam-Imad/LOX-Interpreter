@@ -2,13 +2,12 @@ add_library(
     LOX_LIB
     scanner.cc
     token.cc
-    value.cc
     expression.cc
     operator_strategy.cc
     parser.cc
     statement.cc
     interpreter.cc
-    environment.cc
+    object.cc
 )
 
 target_include_directories(

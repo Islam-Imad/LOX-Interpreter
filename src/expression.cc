@@ -1,6 +1,9 @@
 #include "expression.h"
-#include "value.h"
+#include "object.h"
 #include "operator_strategy.h"
+#include <string>
+#include <memory>
+
 
 BinaryExpression::BinaryExpression(
     std::unique_ptr<const Expression> left, std::unique_ptr<const Expression> right, const std::string &op)
@@ -19,7 +22,7 @@ void UnaryExpression::accept(ExpressionVisitor &visitor) const
     visitor.visit(*this);
 }
 
-LiteralExpression::LiteralExpression(const Value &value) : value(value) {}
+LiteralExpression::LiteralExpression(const std::shared_ptr<OBJ::Object> &value) : value(value) {}
 
 void LiteralExpression::accept(ExpressionVisitor &visitor) const
 {
@@ -52,25 +55,7 @@ void AssignExpression::accept(ExpressionVisitor &visitor) const
 
 void ExpressionPrinter::visit(const LiteralExpression &expression)
 {
-    Value value = expression.value;
-    std::string sub = "";
-    if (value.is_type(ValueType::Number))
-    {
-        sub = std::to_string(value.get<double>());
-    }
-    else if (value.is_type(ValueType::String))
-    {
-        sub = value.get<std::string>();
-    }
-    else if (value.is_type(ValueType::Boolean))
-    {
-        sub = value.get<bool>() ? "true" : "false";
-    }
-    else
-    {
-        sub = "nil";
-    }
-    result = sub;
+    result = expression.value->str();
 }
 
 void ExpressionPrinter::visit(const UnaryExpression &expression)

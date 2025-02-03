@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    Environment environment;
+    OBJ::ENV environment;
     Interpreter interpreter(std::move(operation_executor), environment);
     interpreter.interpret(statements);
     return 0;

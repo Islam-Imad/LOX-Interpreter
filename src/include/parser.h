@@ -5,11 +5,11 @@
 #include <vector>
 #include <memory>
 #include "expression.h"
-#include "value.h"
+#include "object.h"
 #include "token.h"
 #include "statement.h"
 
-Value get_value(Token token, const std::string &source);
+std::shared_ptr<OBJ::Object> get_value(Token token, const std::string &source);
 
 class Parser
 {

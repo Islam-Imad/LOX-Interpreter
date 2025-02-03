@@ -2,7 +2,6 @@
 #include "parser.h"
 #include "expression.h"
 #include "token.h"
-#include "value.h"
 #include <stdexcept>
 
 std::string get_substr(const Token &token, const std::string &source)
@@ -10,22 +9,22 @@ std::string get_substr(const Token &token, const std::string &source)
     return source.substr(token.get_start(), token.get_offset());
 }
 
-Value get_value(Token token, const std::string &lexeme)
+std::shared_ptr<OBJ::Object> get_value(Token token, const std::string &lexeme)
 {
     try
     {
         switch (token.get_type())
         {
         case NUMBER:
-            return Value(std::stod(lexeme));
+            return std::make_shared<OBJ::Number>(std::stod(lexeme));
         case STRING:
-            return Value(lexeme);
+            return std::make_shared<OBJ::String>(lexeme);
         case TRUE:
-            return Value(true);
+            return std::make_shared<OBJ::Boolean>(true);
         case FALSE:
-            return Value(false);
+            return std::make_shared<OBJ::Boolean>(false);
         case NIL:
-            return Value();
+            return std::make_shared<OBJ::Nil>();
         default:
             throw std::runtime_error("Invalid value");
         }
@@ -339,7 +338,7 @@ std::unique_ptr<Statement> Parser::if_statement()
         }
         else if (peek().get_type() == LEFT_BRACE)
         {
-            std::unique_ptr<const Expression> nested_condition = std::make_unique<LiteralExpression>(Value(true));
+            std::unique_ptr<const Expression> nested_condition = std::make_unique<LiteralExpression>(std::make_unique<OBJ::Boolean>(true));
             std::unique_ptr<const Statement> nested_block = compound_statement();
             else_branch = std::make_unique<IfStatement>(std::move(nested_condition), std::move(nested_block), nullptr);
         }

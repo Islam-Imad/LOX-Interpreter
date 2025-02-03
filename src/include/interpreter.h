@@ -7,19 +7,23 @@
 #include "statement.h"
 #include "expression.h"
 #include "operator_strategy.h"
-#include "environment.h"
+#include "object.h"
 
-class Interpreter : StatementVisitor , ExpressionVisitor
+#include <memory>
+
+class Interpreter : StatementVisitor, ExpressionVisitor
 {
 private:
-    Environment environment;
+    OBJ::ENV environment;
     OperationExecutor operation_executor;
-    Value result;
+    std::shared_ptr<OBJ::Object> result;
+    OBJ::TypeCheckVisitor type_check_visitor;
+    OBJ::Casting casting;
 
 public:
-    Interpreter(OperationExecutor operation_executor, Environment &environment);
+    Interpreter(OperationExecutor operation_executor, OBJ::ENV &environment);
     void interpret(const std::vector<std::unique_ptr<const Statement>> &statements);
-    
+
     void visit(const ExpressionStatement &statement) override;
     void visit(const PrintStatement &statement) override;
     void visit(const VarDeclarationStatement &statement) override;
@@ -27,7 +31,7 @@ public:
     void visit(const WhileStatement &statement) override;
     void visit(const ForStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
-    
+
     void visit(const LiteralExpression &expression) override;
     void visit(const UnaryExpression &expression) override;
     void visit(const BinaryExpression &expression) override;

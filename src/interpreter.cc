@@ -2,8 +2,12 @@
 #include "expression.h"
 #include "operator_strategy.h"
 #include "statement.h"
+#include "object.h"
 
-Interpreter::Interpreter(OperationExecutor operation_executor, Environment &environment)
+#include <memory>
+
+
+Interpreter::Interpreter(OperationExecutor operation_executor, OBJ::ENV &environment)
     : operation_executor(std::move(operation_executor)), environment(environment) {}
 
 void Interpreter::interpret(const std::vector<std::unique_ptr<const Statement>> &statements)
@@ -17,9 +21,9 @@ void Interpreter::interpret(const std::vector<std::unique_ptr<const Statement>> 
 void Interpreter::visit(const BinaryExpression &expression)
 {
     expression.left->accept(*this);
-    Value left = result;
+    std::shared_ptr<OBJ::Object> left = result;
     expression.right->accept(*this);
-    Value right = result;
+    std::shared_ptr<OBJ::Object> right = result;
     operation_executor.set_binary_operator_strategy(expression.op);
     result = operation_executor.execute(left, right);
 }
@@ -27,7 +31,7 @@ void Interpreter::visit(const BinaryExpression &expression)
 void Interpreter::visit(const UnaryExpression &expression)
 {
     expression.right->accept(*this);
-    Value right = result;
+    std::shared_ptr<OBJ::Object> right = std::move(result);
     operation_executor.set_unary_operator_strategy(expression.op);
     result = operation_executor.execute(right);
 }
@@ -44,7 +48,8 @@ void Interpreter::visit(const GroupingExpression &expression)
 
 void Interpreter::visit(const VariableExpression &expression)
 {
-    result = environment.get(expression.name);
+    std::shared_ptr<std::shared_ptr<OBJ::Object>> value = environment.get(expression.name);
+    result = *value;
 }
 
 void Interpreter::visit(const AssignExpression &expression)
@@ -61,23 +66,23 @@ void Interpreter::visit(const ExpressionStatement &statement)
 void Interpreter::visit(const PrintStatement &statement)
 {
     statement.expression->accept(*this);
-    std::cout << result.to_string() << std::endl;
+    std::cout << result->str() << std::endl;
 }
 
 void Interpreter::visit(const VarDeclarationStatement &statement)
 {
-    Value init;
+    std::shared_ptr<OBJ::Object> init = nullptr;
     if (statement.expression != nullptr)
     {
         statement.expression->accept(*this);
-        init = result;
+        init = std::move(result);
     }
-    environment.define(statement.name, init);
+    environment.define(statement.name, std::move(init));
 }
 
 void Interpreter::visit(const CompoundStatement &statement)
 {
-    Environment new_environment(&this->environment);
+    OBJ::ENV new_environment(&this->environment);
     Interpreter interpreter(operation_executor.clone(), new_environment);
     interpreter.interpret(statement.statements);
 }
@@ -85,11 +90,12 @@ void Interpreter::visit(const CompoundStatement &statement)
 void Interpreter::visit(const IfStatement &statement)
 {
     statement.condition->accept(*this);
-    if (result.is_type(ValueType::Boolean) == false)
+    result->accept(type_check_visitor);
+    if (type_check_visitor.mathces(OBJ::ObjectType::BOOLEAN) == false)
     {
         throw std::runtime_error("Invalid type for if condition");
     }
-    if (result.get<bool>())
+    if (casting.cast_to_boolean(result) == true)
     {
         statement.block->accept(*this);
     }
@@ -102,11 +108,12 @@ void Interpreter::visit(const IfStatement &statement)
 void Interpreter::visit(const WhileStatement &statement)
 {
     statement.condition->accept(*this);
-    if (result.is_type(ValueType::Boolean) == false)
+    result->accept(type_check_visitor);
+    if (type_check_visitor.mathces(OBJ::ObjectType::BOOLEAN) == false)
     {
         throw std::runtime_error("Invalid type for if condition");
     }
-    while (result.get<bool>())
+    while (casting.cast_to_boolean(result) == true)
     {
         statement.block->accept(*this);
         statement.condition->accept(*this);
@@ -115,18 +122,19 @@ void Interpreter::visit(const WhileStatement &statement)
 
 void Interpreter::visit(const ForStatement &statement)
 {
-    Environment for_environment(&this->environment);
+    OBJ::ENV for_environment(&this->environment);
     Interpreter for_interpreter(operation_executor.clone(), for_environment);
     if (statement.initializer != nullptr)
     {
         statement.initializer->accept(for_interpreter);
     }
     statement.condition->accept(for_interpreter);
-    if (for_interpreter.result.is_type(ValueType::Boolean) == false)
+    result->accept(type_check_visitor);
+    if (type_check_visitor.mathces(OBJ::ObjectType::BOOLEAN) == false)
     {
         throw std::runtime_error("Invalid type for condition");
     }
-    while (for_interpreter.result.get<bool>())
+    while (for_interpreter.casting.cast_to_boolean(result) == true)
     {
         statement.block->accept(for_interpreter);
         if (statement.update != nullptr)
