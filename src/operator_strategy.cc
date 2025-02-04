@@ -15,14 +15,14 @@ std::shared_ptr<Object> AddOperatorStrategy::execute(const std::shared_ptr<Objec
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(l + r);
     }
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<String>(l + r);
     }
     else
@@ -42,8 +42,8 @@ std::shared_ptr<Object> SubtractOperatorStrategy::execute(const std::shared_ptr<
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(l - r);
     }
     else
@@ -63,8 +63,8 @@ std::shared_ptr<Object> MultiplyOperatorStrategy::execute(const std::shared_ptr<
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(l * r);
     }
     else
@@ -84,8 +84,8 @@ std::shared_ptr<Object> ModulusOperatorStrategy::execute(const std::shared_ptr<O
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         double q = floor(l / r);
         return std::make_unique<Number>(l - (q * r));
     }
@@ -106,8 +106,8 @@ std::shared_ptr<Object> PowerOperatorStrategy::execute(const std::shared_ptr<Obj
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(pow(l, r));
     }
     else
@@ -127,8 +127,8 @@ std::shared_ptr<Object> DivideOperatorStrategy::execute(const std::shared_ptr<Ob
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(l / r);
     }
     else
@@ -148,8 +148,8 @@ std::shared_ptr<Object> FloorDivideOperatorStrategy::execute(const std::shared_p
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(floor(l / r));
     }
     else
@@ -167,7 +167,7 @@ std::shared_ptr<Object> NegateOperatorStrategy::execute(const std::shared_ptr<Ob
 
     if (right_type == ObjectType::NUMBER)
     {
-        double r = casting.cast_to_number(right);
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Number>(-r);
     }
     else
@@ -185,7 +185,7 @@ std::shared_ptr<Object> NotOperatorStrategy::execute(const std::shared_ptr<Objec
 
     if (right_type == ObjectType::BOOLEAN)
     {
-        bool r = casting.cast_to_boolean(right);
+        bool r = casting.cast_to_boolean(right)->get_value();
         return std::make_unique<Boolean>(!r);
     }
     else
@@ -205,8 +205,8 @@ std::shared_ptr<Object> LogicalAndOperatorStrategy::execute(const std::shared_pt
 
     if (left_type == ObjectType::BOOLEAN && right_type == ObjectType::BOOLEAN)
     {
-        bool l = casting.cast_to_boolean(left);
-        bool r = casting.cast_to_boolean(right);
+        bool l = casting.cast_to_boolean(left)->get_value();
+        bool r = casting.cast_to_boolean(right)->get_value();
         return std::make_unique<Boolean>(l && r);
     }
     else
@@ -226,8 +226,8 @@ std::shared_ptr<Object> LogicalOrOperatorStrategy::execute(const std::shared_ptr
 
     if (left_type == ObjectType::BOOLEAN && right_type == ObjectType::BOOLEAN)
     {
-        bool l = casting.cast_to_boolean(left);
-        bool r = casting.cast_to_boolean(right);
+        bool l = casting.cast_to_boolean(left)->get_value();
+        bool r = casting.cast_to_boolean(right)->get_value();
         return std::make_unique<Boolean>(l || r);
     }
     else
@@ -251,20 +251,20 @@ std::shared_ptr<Object> EqualOperatorStrategy::execute(const std::shared_ptr<Obj
     }
     else if (left_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Boolean>(l == r);
     }
     else if (left_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<Boolean>(l == r);
     }
     else if (left_type == ObjectType::BOOLEAN)
     {
-        bool l = casting.cast_to_boolean(left);
-        bool r = casting.cast_to_boolean(right);
+        bool l = casting.cast_to_boolean(left)->get_value();
+        bool r = casting.cast_to_boolean(right)->get_value();
         return std::make_unique<Boolean>(l == r);
     }
     else
@@ -278,7 +278,7 @@ std::shared_ptr<Object> NotEqualOperatorStrategy::execute(const std::shared_ptr<
     TypeCheckVisitor visitor;
     Casting casting;
     std::shared_ptr<Object> equal = EqualOperatorStrategy().execute(left, right);
-    bool e = casting.cast_to_boolean(equal);
+    bool e = casting.cast_to_boolean(equal)->get_value();
     return std::make_unique<Boolean>(!e);
 }
 
@@ -293,14 +293,14 @@ std::shared_ptr<Object> GreaterEqualOperatorStrategy::execute(const std::shared_
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Boolean>(l >= r);
     }
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<Boolean>(l >= r);
     }
     else
@@ -320,14 +320,14 @@ std::shared_ptr<Object> GreaterOperatorStrategy::execute(const std::shared_ptr<O
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Boolean>(l > r);
     }
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<Boolean>(l > r);
     }
     else
@@ -347,14 +347,14 @@ std::shared_ptr<Object> LessEqualOperatorStrategy::execute(const std::shared_ptr
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Boolean>(l <= r);
     }
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<Boolean>(l <= r);
     }
     else
@@ -374,14 +374,14 @@ std::shared_ptr<Object> LessOperatorStrategy::execute(const std::shared_ptr<Obje
 
     if (left_type == ObjectType::NUMBER && right_type == ObjectType::NUMBER)
     {
-        double l = casting.cast_to_number(left);
-        double r = casting.cast_to_number(right);
+        double l = casting.cast_to_number(left)->get_value();
+        double r = casting.cast_to_number(right)->get_value();
         return std::make_unique<Boolean>(l < r);
     }
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
-        std::string l = casting.cast_to_string(left);
-        std::string r = casting.cast_to_string(right);
+        std::string l = casting.cast_to_string(left)->get_value();
+        std::string r = casting.cast_to_string(right)->get_value();;
         return std::make_unique<Boolean>(l < r);
     }
     else

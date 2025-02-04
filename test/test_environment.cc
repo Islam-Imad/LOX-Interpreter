@@ -21,7 +21,7 @@ TEST(Environment, Assign)
     TypeCheckVisitor visitor;
     value->accept(visitor);
     ASSERT_EQ(visitor.get_type(), ObjectType::NUMBER);
-    double number = casting.cast_to_number(value);
+    double number = casting.cast_to_number(value)->get_value();
     ASSERT_EQ(number, 43.0);
 }
 
@@ -36,7 +36,7 @@ TEST(Environment, Get)
     TypeCheckVisitor visitor;
     value->accept(visitor);
     ASSERT_EQ(visitor.get_type(), ObjectType::NUMBER);
-    double number = casting.cast_to_number(value);
+    double number = casting.cast_to_number(value)->get_value();
     ASSERT_EQ(number, 42.0);
 }
 
@@ -65,6 +65,6 @@ TEST(Environment, STRING)
     TypeCheckVisitor visitor;
     value->accept(visitor);
     ASSERT_EQ(visitor.get_type(), ObjectType::STRING);
-    std::string str = casting.cast_to_string(value);
+    std::string str = casting.cast_to_string(value)->get_value();
     ASSERT_EQ(str, "Hello, World!");
 }

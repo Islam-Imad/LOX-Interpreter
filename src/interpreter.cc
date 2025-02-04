@@ -74,7 +74,7 @@ void Interpreter::visit(const CallExpression &expression)
     {
         throw std::runtime_error("Invalid type for call expression");
     }
-    std::shared_ptr<Callable> function = std::make_shared<Function>(casting.cast_to_function(result));
+    std::shared_ptr<Callable> function = casting.cast_to_function(result);
     if (function->get_arity() != args.size())
     {
         throw std::runtime_error("Invalid number of arguments");
@@ -110,7 +110,7 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
 
 void Interpreter::visit(const CompoundStatement &statement)
 {
-    ENV new_environment(&this->environment);
+    ENV new_environment(this->environment);
     Interpreter interpreter(operation_executor.clone(), new_environment);
     interpreter.interpret(statement.statements);
 }
@@ -123,7 +123,7 @@ void Interpreter::visit(const IfStatement &statement)
     {
         throw std::runtime_error("Invalid type for if condition");
     }
-    if (casting.cast_to_boolean(result) == true)
+    if (casting.cast_to_boolean(result)->get_value() == true)
     {
         statement.block->accept(*this);
     }
@@ -143,7 +143,7 @@ void Interpreter::visit(const WhileStatement &statement)
         {
             throw std::runtime_error("Invalid type for if condition");
         }
-        if (casting.cast_to_boolean(result) == false)
+        if (casting.cast_to_boolean(result)->get_value() == false)
         {
             break;
         }
@@ -153,7 +153,7 @@ void Interpreter::visit(const WhileStatement &statement)
 
 void Interpreter::visit(const ForStatement &statement)
 {
-    ENV for_environment = ENV(&environment);
+    ENV for_environment = ENV(environment);
     Interpreter for_interpreter(operation_executor.clone(), for_environment);
     if (statement.initializer != nullptr)
     {
@@ -168,7 +168,7 @@ void Interpreter::visit(const ForStatement &statement)
         {
             throw std::runtime_error("Invalid type for condition");
         }
-        if (for_interpreter.casting.cast_to_boolean(result) == false)
+        if (for_interpreter.casting.cast_to_boolean(result)->get_value() == false)
         {
             break;
         }
@@ -190,7 +190,7 @@ void Interpreter::visit(const ReturnStatement &statement)
 
 void Interpreter::visit(const FunctionStatement &statemetn)
 {
-    ENV new_environment(&environment);
-    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, new_environment);
+    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, environment);
     environment.define(statemetn.name, function);
+    function->env = environment;
 }

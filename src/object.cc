@@ -2,10 +2,7 @@
 #include "function.h"
 #include <memory>
 
-Number::Number(double value)
-{
-    this->value = value;
-}
+Number::Number(double value) : value(value) {}
 
 void Number::accept(ObjectVisitor &v)
 {
@@ -22,10 +19,7 @@ std::string Number::str() const
     return std::to_string(value);
 }
 
-String::String(std::string value)
-{
-    this->value = value;
-}
+String::String(std::string value) : value(value) {}
 
 void String::accept(ObjectVisitor &v)
 {
@@ -81,9 +75,8 @@ ENV::ENV()
     parent = nullptr;
 }
 
-ENV::ENV(ENV *parent)
+ENV::ENV(std::shared_ptr<ENV> parent) : parent(parent)
 {
-    this->parent = parent;
 }
 
 bool ENV::contains(const std::string &name)
@@ -91,20 +84,20 @@ bool ENV::contains(const std::string &name)
     return objects.find(name) != objects.end();
 }
 
-void ENV::define(const std::string &name, std::shared_ptr<Object> value)
+void ENV::define(const std::string &name, Value value)
 {
     if (contains(name))
     {
         throw std::runtime_error("Variable already defined: " + name);
     }
-    objects[name] = value;
+    objects[name] = std::make_shared<Value>(value);
 }
 
-void ENV::assign(const std::string &name, std::shared_ptr<Object> value)
+void ENV::assign(const std::string &name, Value value)
 {
     if (contains(name))
     {
-        objects[name] = value;
+        *objects[name] = value;
     }
     else if (parent != nullptr)
     {
@@ -116,11 +109,11 @@ void ENV::assign(const std::string &name, std::shared_ptr<Object> value)
     }
 }
 
-std::shared_ptr<Object> ENV::get(const std::string &name)
+Value ENV::get(const std::string &name)
 {
     if (objects.find(name) != objects.end())
     {
-        return objects[name];
+        return *objects[name];
     }
     else if (parent != nullptr)
     {
@@ -133,12 +126,12 @@ std::shared_ptr<Object> ENV::get(const std::string &name)
     }
 }
 
-double Casting::cast_to_number(const std::shared_ptr<Object> &object)
+std::shared_ptr<Number> Casting::cast_to_number(const Value &object)
 {
     object->accept(visitor);
     if (visitor.mathces(ObjectType::NUMBER))
     {
-        return dynamic_cast<Number &>(*object).get_value();
+        return std::make_shared<Number>(dynamic_cast<Number &>(*object).get_value());
     }
     else
     {
@@ -146,12 +139,12 @@ double Casting::cast_to_number(const std::shared_ptr<Object> &object)
     }
 }
 
-std::string Casting::cast_to_string(const std::shared_ptr<Object> &object)
+std::shared_ptr<String> Casting::cast_to_string(const Value &object)
 {
     object->accept(visitor);
     if (visitor.mathces(ObjectType::STRING))
     {
-        return dynamic_cast<String &>(*object).get_value();
+        return std::make_shared<String>(dynamic_cast<String &>(*object).get_value());
     }
     else
     {
@@ -159,12 +152,12 @@ std::string Casting::cast_to_string(const std::shared_ptr<Object> &object)
     }
 }
 
-bool Casting::cast_to_boolean(const std::shared_ptr<Object> &object)
+std::shared_ptr<Boolean> Casting::cast_to_boolean(const Value &object)
 {
     object->accept(visitor);
     if (visitor.mathces(ObjectType::BOOLEAN))
     {
-        return dynamic_cast<Boolean &>(*object).get_value();
+        return std::make_shared<Boolean>(dynamic_cast<Boolean &>(*object).get_value());
     }
     else
     {
@@ -172,12 +165,12 @@ bool Casting::cast_to_boolean(const std::shared_ptr<Object> &object)
     }
 }
 
-Function Casting::cast_to_function(const std::shared_ptr<Object> &object)
+std::shared_ptr<Function> Casting::cast_to_function(const Value &object)
 {
     object->accept(visitor);
     if (visitor.mathces(ObjectType::FUNCTION))
     {
-        return dynamic_cast<Function &>(*object);
+        return std::make_shared<Function>(dynamic_cast<Function &>(*object).args, dynamic_cast<Function &>(*object).body, dynamic_cast<Function &>(*object).env);
     }
     else
     {

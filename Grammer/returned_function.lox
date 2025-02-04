@@ -1,5 +1,11 @@
-fun test() {
-    return fun() {
-        print 1;
-    };
+fun fun1 (){
+    print 99.99;
 }
+
+fun fun2 (){
+    return fun1;
+}
+
+var result = fun2();
+result();
+result();

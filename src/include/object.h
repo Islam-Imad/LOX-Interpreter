@@ -15,23 +15,27 @@ class ENV;
 class Object
 {
 public:
+    Object() = default;
+    Object(Object & other) = delete;
     virtual void accept(ObjectVisitor &v) = 0;
     virtual std::string str() const = 0;
 };
 
+using Value = std::shared_ptr<Object>;
+
 class ENV
 {
 private:
-    std::unordered_map<std::string, std::shared_ptr<Object>> objects;
-    ENV *parent;
+    std::unordered_map<std::string, std::shared_ptr<Value>> objects;
+    std::shared_ptr<ENV> parent;
 
 public:
     ENV();
-    ENV(ENV *parent);
+    ENV(std::shared_ptr<ENV> parent);
     bool contains(const std::string &name);
-    void define(const std::string &name, std::shared_ptr<Object> value);
-    void assign(const std::string &name, std::shared_ptr<Object> value);
-    std::shared_ptr<Object> get(const std::string &name);
+    void define(const std::string &name, Value value);
+    void assign(const std::string &name, Value value);
+    Value get(const std::string &name);
 };
 
 class Number : public Object
@@ -93,10 +97,10 @@ class Casting
     TypeCheckVisitor visitor;
 
 public:
-    double cast_to_number(const std::shared_ptr<Object> &object);
-    std::string cast_to_string(const std::shared_ptr<Object> &object);
-    bool cast_to_boolean(const std::shared_ptr<Object> &object);
-    Function cast_to_function(const std::shared_ptr<Object> &object);
+    std::shared_ptr<Number> cast_to_number(const std::shared_ptr<Object> &object);
+    std::shared_ptr<String> cast_to_string(const std::shared_ptr<Object> &object);
+    std::shared_ptr<Boolean> cast_to_boolean(const std::shared_ptr<Object> &object);
+    std::shared_ptr<Function> cast_to_function(const std::shared_ptr<Object> &object);
 };
 
 #endif

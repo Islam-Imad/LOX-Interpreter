@@ -29,7 +29,7 @@ std::string Function::str() const
 
 std::shared_ptr<Object> Function::call(std::vector<std::shared_ptr<Object>> args)
 {
-    ENV nested_env(&this->env);
+    ENV nested_env(this->env);
     for (size_t i = 0; i < args.size(); i++)
     {
         nested_env.define(this->args[i], std::move(args[i]));

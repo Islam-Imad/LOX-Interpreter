@@ -27,7 +27,7 @@ TEST(ObjectTest, cast_to_number)
 {
     Casting casting;
     std::shared_ptr<Object> number = std::make_unique<Number>(5);
-    Number num = casting.cast_to_number(number);
+    Number num = casting.cast_to_number(number)->get_value();
     ASSERT_EQ(num.get_value(), 5);
     TypeCheckVisitor visitor;
     number->accept(visitor);
@@ -38,7 +38,7 @@ TEST(ObjectTest, cast_to_string)
 {
     Casting casting;
     std::shared_ptr<Object> string = std::make_unique<String>("Hello, World!");
-    String str = casting.cast_to_string(string);
+    String str = casting.cast_to_string(string)->get_value();
     ASSERT_EQ(str.get_value(), "Hello, World!");
     TypeCheckVisitor visitor;
     string->accept(visitor);
@@ -49,7 +49,7 @@ TEST(ObjectTest, cast_to_boolean)
 {
     Casting casting;
     std::shared_ptr<Object> boolean = std::make_unique<Boolean>(true);
-    Boolean bool_ = casting.cast_to_boolean(boolean);
+    Boolean bool_ = casting.cast_to_boolean(boolean)->get_value();
     ASSERT_EQ(bool_.get_value(), true);
     TypeCheckVisitor visitor;
     boolean->accept(visitor);
