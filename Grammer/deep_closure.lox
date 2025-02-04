@@ -1,0 +1,17 @@
+fun deep1(){
+    var num = 123;
+    fun deep2(){
+        fun deep3(){
+            fun deep4(){
+                print num;
+            }
+            return deep4;
+        }
+        return deep3;
+    }
+    return deep2;
+
+}
+
+var res = deep1();
+res()()();
