@@ -41,6 +41,7 @@ public:
     std::unique_ptr<Statement> for_statement();
     std::unique_ptr<Statement> compound_statement();
     std::unique_ptr<Statement> function_statement();
+    std::unique_ptr<Statement> return_statement();
     std::unique_ptr<Statement> declaration();
 
     std::unique_ptr<Expression> finish_call(std::unique_ptr<Expression> callee);

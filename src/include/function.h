@@ -7,6 +7,7 @@
 #include "statement.h"
 #include <vector>
 #include <memory>
+#include <exception>
 
 class Function : public Callable
 {
@@ -18,6 +19,20 @@ public:
     std::shared_ptr<Object> call(std::vector<std::shared_ptr<Object>> args) override;
     std::string str() const override;
     int get_arity() const override;
+};
+
+class ReturnException : public std::exception
+{
+private:
+    std::shared_ptr<Object> value;
+
+public:
+    ReturnException(std::shared_ptr<Object> value) : value(value) {}
+    const char *what() const noexcept override { 
+        std::string msg = "Return: " + value->str();
+        return msg.c_str();
+    }
+    std::shared_ptr<Object> get_value() const { return value; }
 };
 
 #endif // FUNCTIOON_H

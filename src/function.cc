@@ -36,6 +36,14 @@ std::shared_ptr<Object> Function::call(std::vector<std::shared_ptr<Object>> args
     }
     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
     Interpreter interpreter(std::move(operation_executor), nested_env);
-    body->accept(interpreter);
-    return interpreter.result;
+
+    try
+    {
+        body->accept(interpreter);
+    }
+    catch (const ReturnException &e)
+    {
+        return e.get_value();
+    }
+    return std::make_shared<Nil>();
 }

@@ -197,7 +197,8 @@ TEST(Parser, Basic_Function)
     ASSERT_NE(function_statement, nullptr);
 }
 
-TEST(Parser, Basic_Function_Call){
+TEST(Parser, Basic_Function_Call)
+{
     TokenUtilites token_utilites;
     std::string source = "fun test() { print 1; } test();";
     Scanner scanner = Scanner(source, token_utilites);
@@ -219,5 +220,50 @@ TEST(Parser, Basic_Function_Call){
     const ExpressionStatement *expression_statement = dynamic_cast<const ExpressionStatement *>(statements[1].get());
     ASSERT_NE(expression_statement, nullptr);
     const CallExpression *call_expression = dynamic_cast<const CallExpression *>(expression_statement->expression.get());
+    ASSERT_NE(call_expression, nullptr);
+}
+
+TEST(Parser, return_statement)
+{
+    TokenUtilites token_utilites;
+    std::string source = "fun test() { return 1; }";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    const int expected_statements = 1;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::FUNCTION_STATEMENT);
+    const FunctionStatement *function_statement = dynamic_cast<const FunctionStatement *>(statements[0].get());
+    ASSERT_NE(function_statement, nullptr);
+}
+
+TEST(Parser, assign_return_statement)
+{
+    TokenUtilites token_utilites;
+    std::string source = "fun test() { return 1; } var a = test();";
+    Scanner scanner = Scanner(source, token_utilites);
+    std::vector<Token> tokens = scanner.scan();
+
+    Parser parser(tokens, token_utilites, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    const int expected_statements = 2;
+    ASSERT_EQ(statements.size(), expected_statements);
+    StatementTypeVisitor visitor;
+    statements[0]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::FUNCTION_STATEMENT);
+    const FunctionStatement *function_statement = dynamic_cast<const FunctionStatement *>(statements[0].get());
+    ASSERT_NE(function_statement, nullptr);
+
+    statements[1]->accept(visitor);
+    ASSERT_EQ(visitor.get_result(), StatementType::VAR_DECLARATION_STATEMENT);
+    const VarDeclarationStatement *var_declaration_statement = dynamic_cast<const VarDeclarationStatement *>(statements[1].get());
+    ASSERT_NE(var_declaration_statement, nullptr);
+    const CallExpression *call_expression = dynamic_cast<const CallExpression *>(var_declaration_statement->expression.get());
     ASSERT_NE(call_expression, nullptr);
 }

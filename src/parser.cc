@@ -531,6 +531,17 @@ std::unique_ptr<Statement> Parser::function_statement()
     return std::make_unique<FunctionStatement>(get_substr(name, kSource), args, body);
 }
 
+std::unique_ptr<Statement> Parser::return_statement()
+{
+    std::unique_ptr<Expression> expr = expression();
+    if (peek().get_type() != SEMICOLON)
+    {
+        throw std::runtime_error("Expected ';'");
+    }
+    advance();
+    return std::make_unique<ReturnStatement>(std::move(expr));
+}
+
 std::unique_ptr<Statement> Parser::declaration()
 {
     if (peek().get_type() == VAR)
@@ -546,6 +557,11 @@ std::unique_ptr<Statement> Parser::declaration()
     {
         advance();
         return function_statement();
+    }
+    else if (peek().get_type() == RETURN)
+    {
+        advance();
+        return return_statement();
     }
     return statement();
 }

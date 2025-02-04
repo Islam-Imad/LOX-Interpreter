@@ -27,7 +27,14 @@ ForStatement::ForStatement(std::unique_ptr<const Statement> init, std::unique_pt
 FunctionStatement::FunctionStatement(const std::string &name, std::vector<std::string> args, std::shared_ptr<const Statement> body)
     : name(name), args(args), body(body) {}
 
-void FunctionStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
+ReturnStatement::ReturnStatement(std::unique_ptr<const Expression> expression) : expression(std::move(expression)) {}
+
+void ReturnStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
+
+void FunctionStatement::accept(StatementVisitor &visitor) const
+{
+    visitor.visit(*this);
+}
 
 void ForStatement::accept(StatementVisitor &visitor) const { visitor.visit(*this); }
 
@@ -57,5 +64,7 @@ void StatementTypeVisitor::visit(const CompoundStatement &statement) { result = 
 void StatementTypeVisitor::visit(const ForStatement &statement) { result = StatementType::FOR_STATEMENT; }
 
 void StatementTypeVisitor::visit(const FunctionStatement &statement) { result = StatementType::FUNCTION_STATEMENT; }
+
+void StatementTypeVisitor::visit(const ReturnStatement &statement) { result = StatementType::RETURN_STATEMENT; }
 
 StatementType StatementTypeVisitor::get_result() const { return result; }

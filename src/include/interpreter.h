@@ -32,6 +32,7 @@ public:
     void visit(const ForStatement &statement) override;
     void visit(const CompoundStatement &statement) override;
     void visit(const FunctionStatement &statement) override;
+    void visit(const ReturnStatement &statement) override;
 
     void visit(const LiteralExpression &expression) override;
     void visit(const UnaryExpression &expression) override;

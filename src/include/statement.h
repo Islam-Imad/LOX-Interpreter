@@ -14,6 +14,7 @@ class WhileStatement;
 class ForStatement;
 class CompoundStatement;
 class FunctionStatement;
+class ReturnStatement;
 
 enum StatementType
 {
@@ -24,7 +25,8 @@ enum StatementType
     WHILE_STATEMENT,
     COMPOUND_STATEMENT,
     FOR_STATEMENT,
-    FUNCTION_STATEMENT
+    FUNCTION_STATEMENT,
+    RETURN_STATEMENT
 };
 
 class StatementVisitor
@@ -38,6 +40,7 @@ public:
     virtual void visit(const CompoundStatement &statement) = 0;
     virtual void visit(const ForStatement &statement) = 0;
     virtual void visit(const FunctionStatement &statement) = 0;
+    virtual void visit(const ReturnStatement &statement) = 0;
 };
 
 class StatementTypeVisitor : public StatementVisitor
@@ -54,6 +57,7 @@ public:
     void visit(const CompoundStatement &statement) override;
     void visit(const ForStatement &statement) override;
     void visit(const FunctionStatement &statement) override;
+    void visit(const ReturnStatement &statement) override;
     StatementType get_result() const;
 };
 
@@ -144,6 +148,16 @@ public:
     void accept(StatementVisitor &visitor) const override;
 
     FunctionStatement(const std::string &name, std::vector<std::string> args, std::shared_ptr<const Statement> body);
+};
+
+class ReturnStatement : public Statement
+{
+public:
+    std::unique_ptr<const Expression> expression;
+
+    void accept(StatementVisitor &visitor) const override;
+
+    ReturnStatement(std::unique_ptr<const Expression> expression);
 };
 
 #endif // STATEMENT_H

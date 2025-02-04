@@ -135,17 +135,20 @@ void Interpreter::visit(const IfStatement &statement)
 
 void Interpreter::visit(const WhileStatement &statement)
 {
-    statement.condition->accept(*this);
-    result->accept(type_check_visitor);
-    if (type_check_visitor.mathces(ObjectType::BOOLEAN) == false)
+    do
     {
-        throw std::runtime_error("Invalid type for if condition");
-    }
-    while (casting.cast_to_boolean(result) == true)
-    {
-        statement.block->accept(*this);
         statement.condition->accept(*this);
-    }
+        result->accept(type_check_visitor);
+        if (type_check_visitor.mathces(ObjectType::BOOLEAN) == false)
+        {
+            throw std::runtime_error("Invalid type for if condition");
+        }
+        if (casting.cast_to_boolean(result) == false)
+        {
+            break;
+        }
+        statement.block->accept(*this);
+    } while (true);
 }
 
 void Interpreter::visit(const ForStatement &statement)
@@ -177,6 +180,12 @@ void Interpreter::visit(const ForStatement &statement)
             statement.update->accept(for_interpreter);
         }
     } while (true);
+}
+
+void Interpreter::visit(const ReturnStatement &statement)
+{
+    statement.expression->accept(*this);
+    throw ReturnException(result);
 }
 
 void Interpreter::visit(const FunctionStatement &statemetn)
