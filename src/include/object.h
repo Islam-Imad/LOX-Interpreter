@@ -22,7 +22,7 @@ public:
 class ENV
 {
 private:
-    std::unordered_map<std::string, std::shared_ptr<std::shared_ptr<Object>>> objects;
+    std::unordered_map<std::string, std::shared_ptr<Object>> objects;
     ENV *parent;
 
 public:
@@ -31,7 +31,7 @@ public:
     bool contains(const std::string &name);
     void define(const std::string &name, std::shared_ptr<Object> value);
     void assign(const std::string &name, std::shared_ptr<Object> value);
-    std::shared_ptr<std::shared_ptr<Object>> get(const std::string &name);
+    std::shared_ptr<Object> get(const std::string &name);
 };
 
 class Number : public Object

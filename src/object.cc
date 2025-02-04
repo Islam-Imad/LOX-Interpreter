@@ -96,18 +96,18 @@ void ENV::define(const std::string &name, std::shared_ptr<Object> value)
     {
         throw std::runtime_error("Variable already defined: " + name);
     }
-    objects[name] = std::make_shared<std::shared_ptr<Object>>(value);
+    objects[name] = value;
 }
 
 void ENV::assign(const std::string &name, std::shared_ptr<Object> value)
 {
     if (contains(name))
     {
-        *objects[name] = std::move(value);
+        objects[name] = value;
     }
     else if (parent != nullptr)
     {
-        parent->assign(name, std::move(value));
+        parent->assign(name, value);
     }
     else
     {
@@ -115,7 +115,7 @@ void ENV::assign(const std::string &name, std::shared_ptr<Object> value)
     }
 }
 
-std::shared_ptr<std::shared_ptr<Object>> ENV::get(const std::string &name)
+std::shared_ptr<Object> ENV::get(const std::string &name)
 {
     if (objects.find(name) != objects.end())
     {
@@ -131,7 +131,6 @@ std::shared_ptr<std::shared_ptr<Object>> ENV::get(const std::string &name)
         return nullptr;
     }
 }
-
 
 double Casting::cast_to_number(const std::shared_ptr<Object> &object)
 {

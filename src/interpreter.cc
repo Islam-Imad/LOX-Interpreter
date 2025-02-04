@@ -48,8 +48,7 @@ void Interpreter::visit(const GroupingExpression &expression)
 
 void Interpreter::visit(const VariableExpression &expression)
 {
-    std::shared_ptr<std::shared_ptr<Object>> value = environment.get(expression.name);
-    result = *value;
+    result = environment.get(expression.name);
 }
 
 void Interpreter::visit(const AssignExpression &expression)
@@ -103,7 +102,7 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
     {
         init = std::make_shared<Nil>();
     }
-    environment.define(statement.name, std::move(init));
+    environment.define(statement.name, init);
 }
 
 void Interpreter::visit(const CompoundStatement &statement)
@@ -173,6 +172,7 @@ void Interpreter::visit(const ForStatement &statement)
 
 void Interpreter::visit(const FunctionStatement &statemetn)
 {
-    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, environment);
+    ENV new_environment(&environment);
+    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, new_environment);
     environment.define(statemetn.name, function);
 }
