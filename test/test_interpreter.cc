@@ -47,3 +47,20 @@ TEST(Interpreter, TestInterpreter2)
     Interpreter interpreter(std::move(operation_executor), environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
+
+TEST(Interpreter, For_statement){
+    std::string source = "for (var i = 0; i < 10; i = i + 1) { print i; }";
+
+    TokenUtilites tu;
+
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    Parser parser(tokens, tu, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+
+    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
+
+    ENV environment;
+    Interpreter interpreter(std::move(operation_executor), environment);
+    ASSERT_NO_THROW(interpreter.interpret(statements));
+}

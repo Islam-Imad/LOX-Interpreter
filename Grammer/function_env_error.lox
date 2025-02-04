@@ -1,5 +1,5 @@
 fun test() {
     print num;
 }
-num = 123;
+var num = 123;
 test();

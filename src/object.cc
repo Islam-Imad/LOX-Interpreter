@@ -1,4 +1,5 @@
 #include "object.h"
+#include "function.h"
 #include <memory>
 
 Number::Number(double value)
@@ -168,5 +169,18 @@ bool Casting::cast_to_boolean(const std::shared_ptr<Object> &object)
     else
     {
         throw std::runtime_error("Invalid cast to boolean");
+    }
+}
+
+Function Casting::cast_to_function(const std::shared_ptr<Object> &object)
+{
+    object->accept(visitor);
+    if (visitor.mathces(ObjectType::FUNCTION))
+    {
+        return dynamic_cast<Function &>(*object);
+    }
+    else
+    {
+        throw std::runtime_error("Invalid cast to function");
     }
 }

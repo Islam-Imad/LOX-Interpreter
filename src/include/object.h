@@ -96,6 +96,7 @@ public:
     double cast_to_number(const std::shared_ptr<Object> &object);
     std::string cast_to_string(const std::shared_ptr<Object> &object);
     bool cast_to_boolean(const std::shared_ptr<Object> &object);
+    Function cast_to_function(const std::shared_ptr<Object> &object);
 };
 
 #endif

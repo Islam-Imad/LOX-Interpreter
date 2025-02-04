@@ -8,7 +8,10 @@
 #include <memory>
 
 Interpreter::Interpreter(OperationExecutor operation_executor, ENV &environment)
-    : operation_executor(std::move(operation_executor)), environment(environment) {}
+    : operation_executor(std::move(operation_executor)), environment(environment)
+{
+    result = std::make_shared<Nil>();
+}
 
 void Interpreter::interpret(const std::vector<std::unique_ptr<const Statement>> &statements)
 {
@@ -71,7 +74,7 @@ void Interpreter::visit(const CallExpression &expression)
     {
         throw std::runtime_error("Invalid type for call expression");
     }
-    std::shared_ptr<Callable> function = std::dynamic_pointer_cast<Callable>(result);
+    std::shared_ptr<Callable> function = std::make_shared<Function>(casting.cast_to_function(result));
     if (function->get_arity() != args.size())
     {
         throw std::runtime_error("Invalid number of arguments");
@@ -147,27 +150,33 @@ void Interpreter::visit(const WhileStatement &statement)
 
 void Interpreter::visit(const ForStatement &statement)
 {
-    ENV for_environment(&this->environment);
+    ENV for_environment = ENV(&environment);
     Interpreter for_interpreter(operation_executor.clone(), for_environment);
     if (statement.initializer != nullptr)
     {
         statement.initializer->accept(for_interpreter);
     }
-    statement.condition->accept(for_interpreter);
-    result->accept(type_check_visitor);
-    if (type_check_visitor.mathces(ObjectType::BOOLEAN) == false)
+    do
     {
-        throw std::runtime_error("Invalid type for condition");
-    }
-    while (for_interpreter.casting.cast_to_boolean(result) == true)
-    {
+        statement.condition->accept(for_interpreter);
+        result = for_interpreter.result;
+        result->accept(type_check_visitor);
+        if (type_check_visitor.mathces(ObjectType::BOOLEAN) == false)
+        {
+            throw std::runtime_error("Invalid type for condition");
+        }
+        if (for_interpreter.casting.cast_to_boolean(result) == false)
+        {
+            break;
+        }
+
         statement.block->accept(for_interpreter);
+
         if (statement.update != nullptr)
         {
             statement.update->accept(for_interpreter);
         }
-        statement.condition->accept(for_interpreter);
-    }
+    } while (true);
 }
 
 void Interpreter::visit(const FunctionStatement &statemetn)
