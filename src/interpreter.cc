@@ -110,7 +110,7 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
 
 void Interpreter::visit(const CompoundStatement &statement)
 {
-    ENV new_environment(this->environment);
+    ENV new_environment = ENV(std::make_shared<ENV>(environment));
     Interpreter interpreter(operation_executor.clone(), new_environment);
     interpreter.interpret(statement.statements);
 }
@@ -153,7 +153,7 @@ void Interpreter::visit(const WhileStatement &statement)
 
 void Interpreter::visit(const ForStatement &statement)
 {
-    ENV for_environment = ENV(environment);
+    ENV for_environment = ENV(std::make_shared<ENV>(environment));
     Interpreter for_interpreter(operation_executor.clone(), for_environment);
     if (statement.initializer != nullptr)
     {
@@ -190,7 +190,9 @@ void Interpreter::visit(const ReturnStatement &statement)
 
 void Interpreter::visit(const FunctionStatement &statemetn)
 {
-    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, environment);
+    ENV new_environment;
+    std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, new_environment);
     environment.define(statemetn.name, function);
-    function->env = environment;
+    new_environment = ENV(std::make_shared<ENV>(environment));
+    function->env = new_environment;
 }

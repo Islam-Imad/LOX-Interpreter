@@ -10,7 +10,6 @@ fun deep1(){
         return deep3;
     }
     return deep2;
-
 }
 
 var res = deep1();
