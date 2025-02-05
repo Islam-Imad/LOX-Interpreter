@@ -7,8 +7,8 @@
 
 #include <memory>
 
-Interpreter::Interpreter(OperationExecutor operation_executor, ENV &environment)
-    : operation_executor(std::move(operation_executor)), environment(environment)
+Interpreter::Interpreter(std::shared_ptr<ENV> environment)
+    : environment(environment)
 {
     result = std::make_shared<Nil>();
 }
@@ -51,13 +51,13 @@ void Interpreter::visit(const GroupingExpression &expression)
 
 void Interpreter::visit(const VariableExpression &expression)
 {
-    result = environment.get(expression.name);
+    result = environment->get(expression.name);
 }
 
 void Interpreter::visit(const AssignExpression &expression)
 {
     expression.expression->accept(*this);
-    environment.assign(expression.name, result);
+    environment->assign(expression.name, result);
 }
 
 void Interpreter::visit(const CallExpression &expression)
@@ -79,7 +79,7 @@ void Interpreter::visit(const CallExpression &expression)
     {
         throw std::runtime_error("Invalid number of arguments");
     }
-    result = function->call(args);
+    result = function->call(args, *this);
 }
 
 void Interpreter::visit(const ExpressionStatement &statement)
@@ -105,14 +105,19 @@ void Interpreter::visit(const VarDeclarationStatement &statement)
     {
         init = std::make_shared<Nil>();
     }
-    environment.define(statement.name, init);
+    environment->define(statement.name, init);
 }
 
 void Interpreter::visit(const CompoundStatement &statement)
 {
-    ENV new_environment = ENV(std::make_shared<ENV>(environment));
-    Interpreter interpreter(operation_executor.clone(), new_environment);
-    interpreter.interpret(statement.statements);
+    std::shared_ptr<ENV> new_environment = environment;
+    std::shared_ptr<ENV> old_environment = environment;
+    environment = new_environment;
+    for (const auto &stmt : statement.statements)
+    {
+        stmt->accept(*this);
+    }
+    environment = old_environment;
 }
 
 void Interpreter::visit(const IfStatement &statement)
@@ -153,31 +158,31 @@ void Interpreter::visit(const WhileStatement &statement)
 
 void Interpreter::visit(const ForStatement &statement)
 {
-    ENV for_environment = ENV(std::make_shared<ENV>(environment));
-    Interpreter for_interpreter(operation_executor.clone(), for_environment);
+    std::shared_ptr<ENV> new_environment = std::make_shared<ENV>(environment);
+    std::shared_ptr<ENV> old_environment = environment;
+    environment = new_environment;
     if (statement.initializer != nullptr)
     {
-        statement.initializer->accept(for_interpreter);
+        statement.initializer->accept(*this);
     }
     do
     {
-        statement.condition->accept(for_interpreter);
-        result = for_interpreter.result;
+        statement.condition->accept(*this);
         result->accept(type_check_visitor);
         if (type_check_visitor.mathces(ObjectType::BOOLEAN) == false)
         {
             throw std::runtime_error("Invalid type for condition");
         }
-        if (for_interpreter.casting.cast_to_boolean(result)->get_value() == false)
+        if (casting.cast_to_boolean(result)->get_value() == false)
         {
             break;
         }
 
-        statement.block->accept(for_interpreter);
+        statement.block->accept(*this);
 
         if (statement.update != nullptr)
         {
-            statement.update->accept(for_interpreter);
+            statement.update->accept(*this);
         }
     } while (true);
 }
@@ -192,7 +197,7 @@ void Interpreter::visit(const FunctionStatement &statemetn)
 {
     ENV new_environment;
     std::shared_ptr<Callable> function = std::make_shared<Function>(statemetn.args, statemetn.body, new_environment);
-    environment.define(statemetn.name, function);
+    environment->define(statemetn.name, function);
     new_environment = ENV(std::make_shared<ENV>(environment));
     function->env = new_environment;
 }

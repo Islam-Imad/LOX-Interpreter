@@ -22,7 +22,8 @@ std::shared_ptr<Object> AddOperatorStrategy::execute(const std::shared_ptr<Objec
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<String>(l + r);
     }
     else
@@ -258,7 +259,8 @@ std::shared_ptr<Object> EqualOperatorStrategy::execute(const std::shared_ptr<Obj
     else if (left_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<Boolean>(l == r);
     }
     else if (left_type == ObjectType::BOOLEAN)
@@ -300,7 +302,8 @@ std::shared_ptr<Object> GreaterEqualOperatorStrategy::execute(const std::shared_
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<Boolean>(l >= r);
     }
     else
@@ -327,7 +330,8 @@ std::shared_ptr<Object> GreaterOperatorStrategy::execute(const std::shared_ptr<O
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<Boolean>(l > r);
     }
     else
@@ -354,7 +358,8 @@ std::shared_ptr<Object> LessEqualOperatorStrategy::execute(const std::shared_ptr
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<Boolean>(l <= r);
     }
     else
@@ -381,7 +386,8 @@ std::shared_ptr<Object> LessOperatorStrategy::execute(const std::shared_ptr<Obje
     else if (left_type == ObjectType::STRING && right_type == ObjectType::STRING)
     {
         std::string l = casting.cast_to_string(left)->get_value();
-        std::string r = casting.cast_to_string(right)->get_value();;
+        std::string r = casting.cast_to_string(right)->get_value();
+        ;
         return std::make_unique<Boolean>(l < r);
     }
     else
@@ -473,8 +479,13 @@ std::unique_ptr<UnaryOperatorStrategy> OperatorFactory::get_unary_operator_strat
         throw std::runtime_error("Invalid operator");
     }
 }
+// static OperationExecutor &get_instance();
 
-OperationExecutor::OperationExecutor(OperatorFactory operator_factory) : operator_factory(operator_factory) {}
+OperationExecutor &OperationExecutor::get_instance()
+{
+    static OperationExecutor instance;
+    return instance;
+}
 
 void OperationExecutor::set_binary_operator_strategy(const std::string &op)
 {
@@ -494,9 +505,4 @@ std::shared_ptr<Object> OperationExecutor::execute(const std::shared_ptr<Object>
 std::shared_ptr<Object> OperationExecutor::execute(const std::shared_ptr<Object> &right) const
 {
     return unary_operator_strategy->execute(right);
-}
-
-OperationExecutor OperationExecutor::clone() const
-{
-    return OperationExecutor(operator_factory);
 }

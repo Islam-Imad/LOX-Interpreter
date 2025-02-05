@@ -9,6 +9,17 @@
 #include <memory>
 #include <exception>
 
+class Callable : public Object
+{
+public:
+    ENV env;
+    int arity;
+    virtual std::shared_ptr<Object> call(std::vector<std::shared_ptr<Object>> args, Interpreter &interpreter) = 0;
+    void accept(ObjectVisitor &v) override = 0;
+    virtual int get_arity() const = 0;
+    std::shared_ptr<ENV> senv = nullptr;
+};
+
 class Function : public Callable
 {
 public:
@@ -16,7 +27,7 @@ public:
     std::shared_ptr<const Statement> body;
     Function(std::vector<std::string> args, std::shared_ptr<const Statement> body, ENV environment);
     void accept(ObjectVisitor &v) override;
-    Value call(std::vector<Value> args) override;
+    Value call(std::vector<Value> args, Interpreter &interpreter) override;
     std::string str() const override;
     int get_arity() const override;
 };

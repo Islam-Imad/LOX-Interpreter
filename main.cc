@@ -46,9 +46,9 @@ int main(int argc, char *argv[])
     std::vector<Token> tokens = scanner.scan();
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     interpreter.interpret(statements);
     return 0;
 }

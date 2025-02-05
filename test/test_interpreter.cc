@@ -23,10 +23,8 @@ TEST(Interpreter, TestInterpreter)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -41,10 +39,8 @@ TEST(Interpreter, TestInterpreter2)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -59,10 +55,8 @@ TEST(Interpreter, For_statement)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -77,10 +71,8 @@ TEST(Interpreter, Function_statement)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -95,10 +87,8 @@ TEST(Interpreter, If_statement)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
@@ -113,80 +103,73 @@ TEST(Interpreter, While_statement)
     Parser parser(tokens, tu, source);
     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-    ENV environment;
-    Interpreter interpreter(std::move(operation_executor), environment);
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
     ASSERT_NO_THROW(interpreter.interpret(statements));
 }
 
-// TEST(Interpreter, Return_statement)
-// {
-//     std::string source = "fun test() { return 1; }";
+TEST(Interpreter, Return_statement)
+{
+    std::string source = "fun test() { return 1; }";
 
-//     TokenUtilites tu;
+    TokenUtilites tu;
 
-//     Scanner scanner(source, tu);
-//     std::vector<Token> tokens = scanner.scan();
-//     Parser parser(tokens, tu, source);
-//     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    Parser parser(tokens, tu, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-//     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
+    ASSERT_NO_THROW(interpreter.interpret(statements));
+}
 
-//     ENV environment;
-//     Interpreter interpreter(std::move(operation_executor), environment);
-//     ASSERT_NO_THROW(interpreter.interpret(statements));
-// }
+TEST(Interpreter, Assign_return_statement)
+{
+    std::string source = "fun test() { return 99; } var a = test(); print a;";
 
-// TEST(Interpreter, Assign_return_statement)
-// {
-//     std::string source = "fun test() { return 99; } var a = test(); print a;";
+    TokenUtilites tu;
 
-//     TokenUtilites tu;
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    Parser parser(tokens, tu, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-//     Scanner scanner(source, tu);
-//     std::vector<Token> tokens = scanner.scan();
-//     Parser parser(tokens, tu, source);
-//     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
 
-//     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
+    Interpreter interpreter(environment);
+    ASSERT_NO_THROW(interpreter.interpret(statements));
+}
 
-//     ENV environment;
-//     Interpreter interpreter(std::move(operation_executor), environment);
-//     ASSERT_NO_THROW(interpreter.interpret(statements));
-// }
+TEST(Interpreter, Return_Function)
+{
+    std::string source = "fun test() { return 99; } fun test2() { return test(); } print test2();";
 
-// TEST(Interpreter, Return_Function)
-// {
-//     std::string source = "fun test() { return 99; } fun test2() { return test(); } print test2();";
+    TokenUtilites tu;
 
-//     TokenUtilites tu;
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    Parser parser(tokens, tu, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-//     Scanner scanner(source, tu);
-//     std::vector<Token> tokens = scanner.scan();
-//     Parser parser(tokens, tu, source);
-//     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
 
-//     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
+    Interpreter interpreter(environment);
+    ASSERT_NO_THROW(interpreter.interpret(statements));
+}
 
-//     ENV environment;
-//     Interpreter interpreter(std::move(operation_executor), environment);
-//     ASSERT_NO_THROW(interpreter.interpret(statements));
-// }
+TEST(Interpreter, closure)
+{
+    std::string source = "fun test() { var a = 1; fun test2() { print a; } return test2; } var x = test(); x();";
 
-// TEST(Interpreter, closure){
-//     std::string source = "fun test() { var a = 1; fun test2() { print a; } return test2; } var a = test(); a();";
+    TokenUtilites tu;
 
-//     TokenUtilites tu;
+    Scanner scanner(source, tu);
+    std::vector<Token> tokens = scanner.scan();
+    Parser parser(tokens, tu, source);
+    std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
 
-//     Scanner scanner(source, tu);
-//     std::vector<Token> tokens = scanner.scan();
-//     Parser parser(tokens, tu, source);
-//     std::vector<std::unique_ptr<const Statement>> statements = parser.parse();
-
-//     OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-
-//     ENV environment;
-//     Interpreter interpreter(std::move(operation_executor), environment);
-//     ASSERT_NO_THROW(interpreter.interpret(statements));
-// }
+    std::shared_ptr<ENV> environment = std::make_shared<ENV>();
+    Interpreter interpreter(environment);
+    ASSERT_NO_THROW(interpreter.interpret(statements));
+}

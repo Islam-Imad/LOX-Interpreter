@@ -230,7 +230,7 @@ TEST(OperatorStrategyTest, OperationExecutor)
 {
     Casting casting;
     OperatorFactory operator_factory;
-    OperationExecutor operation_executor(operator_factory);
+    OperationExecutor &operation_executor = OperationExecutor::get_instance();
     operation_executor.set_binary_operator_strategy("<=");
     std::shared_ptr<Object> left = std::make_shared<Number>(1.0);
     std::shared_ptr<Object> right = std::make_shared<Number>(2.0);

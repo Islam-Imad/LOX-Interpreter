@@ -132,15 +132,15 @@ class OperationExecutor
 private:
     std::unique_ptr<BinaryOperatorStrategy> binary_operator_strategy = nullptr;
     std::unique_ptr<UnaryOperatorStrategy> unary_operator_strategy = nullptr;
-    OperatorFactory operator_factory;
+    OperatorFactory operator_factory = OperatorFactory();
 
+    OperationExecutor() = default;
+    OperationExecutor(const OperationExecutor &) = delete;
 public:
-    OperationExecutor(OperatorFactory operator_factory);
+    static OperationExecutor &get_instance();
     void set_binary_operator_strategy(const std::string &op);
     void set_unary_operator_strategy(const std::string &op);
     std::shared_ptr<Object> execute(const std::shared_ptr<Object> &left, const std::shared_ptr<Object> &right) const;
     std::shared_ptr<Object> execute(const std::shared_ptr<Object> &right) const;
-
-    OperationExecutor clone() const;
 };
 #endif // OPERATOR_STRATEGY_H

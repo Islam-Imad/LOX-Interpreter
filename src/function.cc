@@ -27,15 +27,20 @@ std::string Function::str() const
     return "Function";
 }
 
-std::shared_ptr<Object> Function::call(std::vector<std::shared_ptr<Object>> args)
+std::shared_ptr<Object> Function::call(std::vector<std::shared_ptr<Object>> args, Interpreter &interpreter)
 {
-    ENV nested_env(this->env);
+    if (senv == nullptr)
+    {
+        senv = std::make_shared<ENV>(env);
+    }
+    std::shared_ptr<ENV> nested_env = senv;
     for (size_t i = 0; i < args.size(); i++)
     {
-        nested_env.define(this->args[i], std::move(args[i]));
+        nested_env->define(this->args[i], std::move(args[i]));
     }
-    OperationExecutor operation_executor = OperationExecutor(OperatorFactory());
-    Interpreter interpreter(std::move(operation_executor), nested_env);
+    std::shared_ptr<ENV> new_environment = nested_env;
+    std::shared_ptr<ENV> old_environment = interpreter.environment;
+    interpreter.environment = new_environment;
 
     try
     {
@@ -43,7 +48,9 @@ std::shared_ptr<Object> Function::call(std::vector<std::shared_ptr<Object>> args
     }
     catch (const ReturnException &e)
     {
+        interpreter.environment = old_environment;
         return e.get_value();
     }
+    interpreter.environment = old_environment;
     return std::make_shared<Nil>();
 }

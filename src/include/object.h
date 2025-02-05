@@ -82,15 +82,6 @@ public:
     std::string str() const override;
 };
 
-class Callable : public Object
-{
-public:
-    ENV env;
-    int arity;
-    virtual std::shared_ptr<Object> call(std::vector<std::shared_ptr<Object>> args) = 0;
-    void accept(ObjectVisitor &v) override = 0;
-    virtual int get_arity() const = 0;
-};
 
 class Casting
 {
