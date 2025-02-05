@@ -6,13 +6,13 @@ Loxie is a dynamically-typed, interpreted programming language designed for simp
 
 The language supports a variety of features such as:
 
-- **Arithmetic Operations**: Supports standard operators like `+`,`-`,`*`,`/`, and exponentiation `**`.
-- **Variables**: Allowing you to store and manipulate data with simple variable assignments.
-- **Functions**: Define reusable code blocks with support for recursion and higher-order functions.
-- **Conditionals**: Using `if`, `else if`, and `else` statements for conditional execution.
-- **Loops**: Both `while` and `for` loops for iterating over code.
-- **Closures**: Functions that capture and remember the environment where they were created, enabling powerful functional programming patterns.
-- **Printing**: Output to the console using the `print` keyword.
+- **<code>Arithmetic Operations</code>**: Supports standard operators like `+`,`-`,`*`,`/`, and exponentiation `**`.
+- **<code>Variables</code>**: Allowing you to store and manipulate data with simple variable assignments.
+- **<code>Functions</code>**: Define reusable code blocks with support for recursion and higher-order functions.
+- **<code>Conditionals</code>**: Using `if`, `else if`, and `else` statements for conditional execution.
+- **<code>Loops</code>**: Both `while` and `for` loops for iterating over code.
+- **<code>Closures</code>**: Functions that capture and remember the environment where they were created, enabling powerful functional programming patterns.
+- **<code>Printing</code>**: Output to the console using the `print` keyword.
 
 ## Example Usage
 
