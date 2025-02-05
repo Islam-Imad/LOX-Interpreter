@@ -135,3 +135,6 @@ Feel free to open issues or pull requests. Contributions are welcome!
 
 This project is licensed under the MIT License.
 
+## Acknowledgment  
+This project was heavily inspired by concepts and techniques from the book [Crafting Interpreters](https://craftinginterpreters.com) by Robert Nystrom.
+
