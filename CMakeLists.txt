@@ -14,9 +14,9 @@ configure_file(
 )
 
 enable_testing()
+add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 
 add_executable(
     lox

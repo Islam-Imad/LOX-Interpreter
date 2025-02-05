@@ -5,5 +5,5 @@ fun fib (a) {
     return fib(a - 1) + fib(a - 2);
 }
 
-var a = fib(30);
+var a = fib(20);
 print a;
