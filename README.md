@@ -9,7 +9,7 @@ A complete **tree-walking interpreter** implementation for the **Lox programming
 ## 📋 Table of Contents
 
 - [About the Project](#about-the-project)
-- [Language Features](#language-features)
+- [Language Features](#language-features)  
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -196,49 +196,6 @@ print counter(); // 2
 
 ## 🎯 Examples
 
-## How to Run
-
-To run the Loxie interpreter on your system, follow the steps below:
-
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/Islam-Imad/Loxie-Interpreter.git
-    cd Loxie-Interpreter
-    ```
-
-2. **Install CMake**:
-    - **Linux**:
-      ```bash
-      sudo apt-get install cmake
-      ```
-    - **MacOS**:
-      ```bash
-      brew install cmake
-      ```
-    - **Windows**:
-      - Download the installer from [here](https://cmake.org/download/).
-
-3. **Build the project**:
-    - Create a `build` directory and navigate into it:
-      ```bash
-      mkdir build
-      cd build
-      ```
-    - Generate the build files using CMake:
-      ```bash
-      cmake ..
-      ```
-    - Build the project using `make`:
-      ```bash
-      make
-      ```
-
-4. **Run the interpreter**:
-    - Use the following command to run an example Lox script:
-      ```bash
-      ./lox ../Grammer/HelloWorld.lox
-      ```
-
 The `Grammer/` directory contains various example programs demonstrating different language features:
 
 | Example | Description |
@@ -304,7 +261,7 @@ The interpreter follows a classic tree-walking design with the following compone
 
 ### Project Structure
 
-```
+```text
 src/
 ├── include/           # Header files
 │   ├── scanner.h      # Lexical analysis
