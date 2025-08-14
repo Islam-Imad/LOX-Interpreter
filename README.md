@@ -21,7 +21,7 @@ A complete **tree-walking interpreter** implementation for the **Lox programming
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## 🎯 About the Project
+## About the Project
 
 **LOX** is a dynamically-typed, interpreted programming language designed for simplicity, clarity, and educational purposes. This interpreter implements the complete Lox language specification using a **tree-walking interpreter** approach, making it an excellent resource for understanding interpreter design and implementation.
 
@@ -33,7 +33,7 @@ A complete **tree-walking interpreter** implementation for the **Lox programming
 - **Functional Features**: First-class functions, closures, and higher-order programming
 - **Modern Features**: Supports contemporary programming paradigms
 
-## ✨ Language Features
+## Language Features
 
 ### Core Language Features
 - **🔢 Arithmetic Operations**: Standard operators (`+`, `-`, `*`, `/`) plus exponentiation (`**`)
@@ -51,7 +51,7 @@ A complete **tree-walking interpreter** implementation for the **Lox programming
 - **Nil**: Null/void value
 - **Functions**: First-class function objects
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone the repository
@@ -66,7 +66,7 @@ cmake .. && make
 ./lox ../Grammer/hello_world.lox
 ```
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
@@ -115,7 +115,7 @@ cmake .. && make
    ./lox ../Grammer/hello_world.lox
    ```
 
-## 📖 Usage
+## Usage
 
 ### Command Line Interface
 
@@ -138,7 +138,7 @@ The interpreter accepts a single Lox source file as an argument:
 ./lox ../Grammer/closure.lox
 ```
 
-## 📝 Language Syntax
+## Language Syntax
 
 ### Variables
 ```lox
@@ -194,7 +194,7 @@ print counter(); // 1
 print counter(); // 2
 ```
 
-## 🎯 Examples
+## Examples
 
 The `Grammer/` directory contains various example programs demonstrating different language features:
 
@@ -242,7 +242,7 @@ for (var i = 1; i <= 5; i = i + 1) {
 }
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 The interpreter follows a classic tree-walking design with the following components:
 
@@ -276,7 +276,7 @@ src/
 └── ...
 ```
 
-## 🧪 Testing
+## Testing
 
 The project includes comprehensive unit tests using **Google Test** framework.
 
@@ -300,7 +300,7 @@ ctest
 - **Interpreter Tests**: Expression evaluation and statement execution
 - **Environment Tests**: Variable scoping and closure behavior
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help:
 
@@ -330,11 +330,11 @@ Contributions are welcome! Here's how you can help:
 - Add appropriate comments and documentation
 - Ensure code is properly formatted
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **[Robert Nystrom](https://github.com/munificent)** for the exceptional book "[Crafting Interpreters](https://craftinginterpreters.com/)" that inspired this implementation
 - **[Google Test](https://github.com/google/googletest)** for providing the testing framework
