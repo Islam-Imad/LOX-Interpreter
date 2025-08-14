@@ -4,12 +4,12 @@ fun closure() {
         print a;
         a = a + 1;
     }
-    fun1();
-    fun1();
     return fun1;
 }
 
 closure()();
 var fun1 = closure();
+fun1();
+fun1();
 fun1();
 fun1();
